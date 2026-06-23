@@ -253,20 +253,17 @@ function fromRow(r){
 }
 
 function loadActs(cb){
-  var cached=localStorage.getItem('techo_acts');
-  if(cached){acts=JSON.parse(cached);renderLanding();}
+  localStorage.removeItem('techo_acts');
   sb.from('actividades').select('*').order('id',{ascending:true})
     .then(function(res){
       if(res.error){console.error('Supabase load error:',res.error);if(cb)cb();return;}
       acts=(res.data||[]).map(fromRow);
-      localStorage.setItem('techo_acts',JSON.stringify(acts));
       renderLanding();
       if(cb)cb();
     });
 }
 
 function saveActs(cb){
-  localStorage.setItem('techo_acts',JSON.stringify(acts));
   var rows=acts.map(toRow);
   sb.from('actividades').upsert(rows,{onConflict:'id'})
     .then(function(res){
@@ -275,7 +272,7 @@ function saveActs(cb){
     });
 }
 
-function save2ls(){localStorage.setItem('techo_acts',JSON.stringify(acts));}
+function save2ls(){}
 function esc(s){return(s||'').replace(/"/g,'&quot;');}
 function contrast(hex){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return(r*299+g*587+b*114)/1000>140?'#1D1D1B':'#fff';}
 
@@ -295,7 +292,7 @@ function compress(file,cb){
 function renderPhotos(){
   var el=document.getElementById('photo-list');
   el.innerHTML=photos.map(function(p,i){
-    var thumb=p.type==='base64'?'<img src="'+p.v+'">'  :'<img src="'+esc(p.v)+'" onerror="this.style.display=\'none\'">';
+    var thumb=p.type==='base64'?'<img src="'+p.v+'">'  :'<img src="'+esc(p.v)+'" onerror="this.style.display=\'none\'">'
     var ctrl=p.type==='base64'?'<span class="ph-label">Imagen local</span>'
       :'<input type="url" value="'+esc(p.v)+'" placeholder="https://..." oninput="photos['+i+'].v=this.value">';
     return'<div class="photo-item">'+thumb+ctrl+'<button class="photo-rm" onclick="photos.splice('+i+',1);renderPhotos()">✕</button></div>';
@@ -321,7 +318,6 @@ function save(){
 }
 
 function editAct(id){
-  // si acts está vacío, recargar primero
   if(!acts.length){
     loadActs(function(){ editAct(id); });
     return;
@@ -345,7 +341,7 @@ function editAct(id){
 function delAct(id){
   if(!confirm('¿Eliminar?'))return;
   acts=acts.filter(function(a){return a.id!==id;});
-  save2ls();renderLanding();renderAdminList();
+  renderLanding();renderAdminList();
   sb.from('actividades').delete().eq('id',id)
     .then(function(res){if(res.error)console.error('Supabase delete error:',res.error);else toast('✓ Eliminada');});
 }
