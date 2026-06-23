@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actividades del Finde · TECHO La Plata</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/eEb3QS8.png">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--azul:#0092DD;--amarillo:#FDC533;--verde:#2FAC66;--rosa:#E94362;--violeta:#954B97;--negro:#1D1D1B;--blanco:#fff}
+body{font-family:'Fredoka',sans-serif;background:#f5f5f5;color:var(--negro)}
+
+/* TOPBAR */
+.topbar{background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;position:sticky;top:0;z-index:100}
+.logo-img{height:68px;width:auto;mix-blend-mode:screen}
+
+/* HERO */
+.hero{background:#000;position:relative;overflow:hidden;padding:80px 24px 72px;text-align:center}
+.hero-bg{position:absolute;inset:0;background:url('https://i.imgur.com/7evxH4k.jpeg') center/cover;opacity:.28}
+.hero-content{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amarillo);color:#000;font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:20px}
+.hero-title{font-weight:700;font-size:clamp(52px,13vw,110px);line-height:.88;color:white;text-transform:uppercase;letter-spacing:-1px}
+.hero-title .accent{color:var(--amarillo)}
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.75);margin-top:18px;font-weight:400}
+.hero-stats{display:inline-flex;gap:32px;margin-top:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:16px 32px}
+.hero-stat-num{font-size:36px;font-weight:700;color:var(--amarillo);line-height:1}
+.hero-stat-label{font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* STRIP */
+.strip{background:var(--azul);padding:14px 24px;text-align:center;font-weight:600;font-size:14px;color:white;letter-spacing:1px;text-transform:uppercase}
+
+/* CARDS */
+.card-list{max-width:1160px;margin:0 auto;padding:40px 20px 60px}
+.day-block{margin-bottom:48px}
+.day-sep{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.day-sep-label{font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#888;white-space:nowrap}
+.day-sep-line{flex:1;height:1px;background:#ddd}
+.day-sep-count{background:var(--azul);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px}
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+
+/* CARD */
+.act-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.act-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.14)}
+.act-color-bar{height:6px;width:100%}
+.act-header{padding:20px 24px 16px}
+.act-tag{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:white;border-radius:6px;padding:4px 12px;margin-bottom:12px}
+.act-title{font-weight:700;font-size:22px;line-height:1.15;color:var(--negro)}
+.act-punto{font-size:13px;color:#888;margin-top:6px;display:flex;align-items:center;gap:4px}
+.act-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:2px}
+.act-photos img{width:100%;height:160px;object-fit:cover;display:block}
+.act-no-photos{height:10px;background:#f0f0f0}
+.act-body{padding:20px 24px 24px;flex:1;display:flex;flex-direction:column;gap:12px}
+.act-desc{font-size:14px;line-height:1.6;color:#555;flex:1}
+.act-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:white;text-decoration:none;padding:12px 24px;border-radius:10px;transition:filter .2s,transform .1s;align-self:flex-start}
+.act-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.act-btn-arrow{font-size:18px}
+
+/* FOOTER CTA */
+.cta{width:100%;padding:80px 24px;text-align:center;position:relative;overflow:hidden;background:#000;background-image:url('https://i.imgur.com/7evxH4k.jpeg');background-size:cover;background-position:center}
+.cta::before{content:'';position:absolute;inset:0;background:rgba(0,20,50,0.65);z-index:0}
+.cta>*{position:relative;z-index:1}
+.cta-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--amarillo);margin-bottom:16px}
+.cta h2{font-weight:700;font-size:clamp(32px,6vw,60px);color:white;line-height:1.05;margin-bottom:12px;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.cta p{font-size:18px;color:rgba(255,255,255,0.8)}
+
+/* ADMIN BTN */
+.admin-secret{text-align:center;padding:16px;background:#000}
+.admin-secret button{background:none;border:none;color:rgba(255,255,255,0.15);font-size:10px;cursor:pointer;letter-spacing:2px;font-family:'Fredoka',sans-serif}
+
+/* EMPTY */
+.empty{text-align:center;padding:80px 20px;color:#aaa}
+.empty-ico{font-size:48px;margin-bottom:12px}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;overflow-y:auto;padding:20px}
+.overlay.open{display:block}
+.modal{background:#fff;border-radius:20px;max-width:640px;margin:0 auto;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.35)}
+.modal-hdr{background:#000;padding:20px 28px;display:flex;align-items:center;justify-content:space-between}
+.modal-hdr h2{font-weight:700;font-size:17px;color:white}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer}
+.auth-wrap{padding:48px 28px;text-align:center}
+.auth-wrap h3{font-weight:700;font-size:22px;margin-bottom:6px}
+.auth-wrap p{font-size:14px;color:#888;margin-bottom:24px}
+.auth-err{font-size:13px;color:var(--rosa);margin-bottom:8px;display:none}
+.admin-body{padding:24px 28px}
+.tabs{display:flex;border-bottom:2px solid #eee;margin-bottom:24px}
+.tab{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;padding:9px 18px;border:none;background:none;color:#bbb;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer}
+.tab.on{color:var(--azul);border-bottom-color:var(--azul)}
+.pane{display:none}.pane.on{display:block}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg .full{grid-column:1/-1}
+.fl{display:flex;flex-direction:column;gap:4px}
+.fl label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999}
+input[type=text],input[type=url],input[type=password],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;font-size:14px;font-family:'Fredoka',sans-serif;outline:none;color:var(--negro);background:white;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--azul)}
+textarea{resize:vertical;min-height:72px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.swatch{width:32px;height:32px;border-radius:8px;cursor:pointer;border:3px solid transparent;transition:transform .15s}
+.swatch.on{border-color:#000;transform:scale(1.15)}
+.photo-list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.photo-item{display:flex;align-items:center;gap:8px;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:6px 10px}
+.photo-item img{width:48px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.photo-item .ph-label{flex:1;font-size:13px;color:#999}
+.photo-item input[type=url]{border:none;background:transparent;padding:4px 0;font-size:13px;flex:1}
+.photo-item input[type=url]:focus{outline:none}
+.photo-rm{background:#fee2e2;border:none;color:#b91c1c;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:15px}
+.btn-add{background:none;border:1.5px dashed #ddd;color:#bbb;flex:1;padding:10px;border-radius:10px;cursor:pointer;font-size:13px;font-family:'Fredoka',sans-serif;text-align:center;transition:border-color .2s}
+.btn-add:hover{border-color:var(--azul);color:var(--azul)}
+label.btn-add{display:block;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;width:100%;margin-top:16px}
+.btn-azul{background:var(--azul);color:white}
+.btn-rojo{background:var(--rosa);color:white}
+.btn-sm{padding:6px 12px;font-size:13px;width:auto;margin:0;border-radius:8px}
+.btn-ghost{background:none;border:1.5px solid #eee;color:#555;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;padding:6px 12px;border-radius:8px;cursor:pointer}
+.btn-ghost:hover{border-color:var(--azul);color:var(--azul)}
+.btn-ghost-red{border-color:#fca5a5;color:var(--rosa)}
+.admin-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #f3f4f6}
+.admin-item:last-child{border-bottom:none}
+.admin-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.admin-info{flex:1}.admin-info .t{font-weight:600;font-size:15px}.admin-info .s{font-size:12px;color:#bbb;margin-top:2px}
+.admin-actions{display:flex;gap:6px}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1D1D1B;color:white;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;padding:12px 28px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:768px){
+  .cards-grid{grid-template-columns:1fr}
+  .act-title{font-size:18px}
+  .hero-stats{flex-direction:column;gap:16px}
+  .fg{grid-template-columns:1fr}.fg .full{grid-column:1}
+  .admin-body{padding:16px}
+  .topbar{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://i.imgur.com/eEb3QS8.png" alt="TECHO" class="logo-img">
+</div>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📍 La Plata · Buenos Aires</div>
+    <div class="hero-title">Actividades<br><span class="accent">del Finde</span></div>
+    <div class="hero-sub">Anotate en los link de cada actividad :)</div>
+    <div class="hero-stats" id="hero-stats" style="display:none">
+      <div>
+        <div class="hero-stat-num" id="stat-acts">0</div>
+        <div class="hero-stat-label">Actividades</div>
+      </div>
+      <div style="width:1px;background:rgba(255,255,255,0.15)"></div>
+      <div>
+        <div class="hero-stat-num" id="stat-days">0</div>
+        <div class="hero-stat-label">Días</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strip" id="strip" style="display:none">¡Este finde hay actividades! Elegí la tuya y sumate 🙌</div>
+
+<div class="card-list" id="landing"></div>
+
+<div class="cta" id="bottom-cta" style="display:none">
+  <div class="cta-eyebrow">TECHO La Plata</div>
+  <h2>Hacer comunidad<br>está a solo un clic</h2>
+  <p>¡Elegí tu actividad y súmate!</p>
+</div>
+
+<div class="admin-secret">
+  <button onclick="openAdmin()">⚙</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>Panel Admin · Actividades</h2>
+      <button class="modal-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div id="auth-section">
+      <div class="auth-wrap">
+        <h3>🔒 Acceso restringido</h3>
+        <p>Ingresá la contraseña para gestionar las actividades.</p>
+        <input type="password" id="pass-input" placeholder="Contraseña" style="max-width:300px;display:block;margin:0 auto 8px">
+        <div class="auth-err" id="auth-err">Contraseña incorrecta.</div>
+        <button class="btn btn-azul" style="max-width:300px;margin:0 auto" onclick="tryAuth()">Ingresar</button>
+      </div>
+    </div>
+    <div class="admin-body" id="admin-section" style="display:none">
+      <div class="tabs">
+        <button class="tab on" id="tab-new" onclick="showTab('new')">+ Nueva actividad</button>
+        <button class="tab" id="tab-list" onclick="showTab('list')">Gestionar</button>
+      </div>
+      <div class="pane on" id="pane-new">
+        <div class="fg">
+          <div class="fl full"><label>Título *</label><input type="text" id="f-title" placeholder="Ej: Parada de Colectivo | Los Lapachos"></div>
+          <div class="fl"><label>Día</label><select id="f-day"><option>SÁBADO</option><option>DOMINGO</option><option>SÁBADO y DOMINGO</option></select></div>
+          <div class="fl"><label>Fecha</label><input type="text" id="f-date" placeholder="13 de Junio"></div>
+          <div class="fl full"><label>Punto de encuentro</label><input type="text" id="f-punto" value="Ofi C. 47 885 a las 9:00hs"></div>
+          <div class="fl full"><label>Descripción</label><textarea id="f-desc" placeholder="Breve descripción..."></textarea></div>
+          <div class="fl full"><label>Link de inscripción</label><input type="url" id="f-link" placeholder="https://actividades.techo.org/..."></div>
+          <div class="fl full">
+            <label>Color</label>
+            <div class="swatches">
+              <div class="swatch on" style="background:#0092DD" data-c="#0092DD" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#2FAC66" data-c="#2FAC66" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#E94362" data-c="#E94362" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#FDC533" data-c="#FDC533" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#954B97" data-c="#954B97" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#005CA9" data-c="#005CA9" onclick="pickColor(this)"></div>
+              <div class="swatch" style="background:#F088B6" data-c="#F088B6" onclick="pickColor(this)"></div>
+            </div>
+          </div>
+          <div class="fl full">
+            <label>Fotos</label>
+            <div class="photo-list" id="photo-list"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn-add" onclick="addPhotoUrl()">+ URL</button>
+              <label class="btn-add">📷 Desde el ordenador<input type="file" accept="image/*" multiple style="display:none" onchange="handleFiles(this)"></label>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-azul" id="save-btn" onclick="save()">Guardar actividad</button>
+        <button class="btn btn-rojo" id="cancel-btn" style="display:none;margin-top:8px" onclick="cancelEdit()">Cancelar edición</button>
+      </div>
+      <div class="pane" id="pane-list">
+        <div id="admin-list"></div>
+        <p id="admin-empty" style="text-align:center;color:#bbb;font-size:14px;padding:28px 0;display:none">No hay actividades cargadas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var PASS='techo2025', CD='#0092DD';
+var API='https://script.google.com/macros/s/AKfycbwQ7MK63aUGmbamCV830q1KWHSs5itcusgkdbEYEJpxU1pxp-zYA1lU0j3JTgNIrWY/exec';
+var acts=[], editId=null, pickedColor=CD, photos=[];
+
+var SHEET_ID='1XiczKWeNiBp_Fpz_wcA5Oe9b-oPXMB77_T1pW6Il4cY';
+var SHEET_CSV='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv';
+
+function loadActs(cb){
+  var cached=localStorage.getItem('techo_acts');
+  if(cached){acts=JSON.parse(cached);renderLanding();}
+  fetch(SHEET_CSV+'&t='+Date.now())
+    .then(function(r){return r.text();})
+    .then(function(csv){
+      var rows=csv.split('\n').filter(function(r){return r.trim();});
+      if(rows.length<2){if(cb)cb();return;}
+      var headers=parseCSVRow(rows[0]);
+      acts=rows.slice(1).map(function(row){
+        var vals=parseCSVRow(row);
+        var obj={};
+        headers.forEach(function(h,i){obj[h]=vals[i]||'';});
+        try{obj.photos=JSON.parse(obj.photos||'[]');}catch(e){obj.photos=[];}
+        return obj;
+      }).filter(function(a){return a.id;});
+      localStorage.setItem('techo_acts',JSON.stringify(acts));
+      renderLanding();
+      if(cb)cb();
+    }).catch(function(){if(cb)cb();});
+}
+
+function parseCSVRow(row){
+  var result=[],cur='',inQ=false;
+  for(var i=0;i<row.length;i++){
+    var c=row[i];
+    if(c==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur.trim());cur='';}
+    else cur+=c;
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function saveActs(cb){
+  localStorage.setItem('techo_acts',JSON.stringify(acts));
+  if(cb)cb();
+  fetch(API,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({action:'save',acts:acts})
+  }).catch(function(e){console.log('Sheet sync error:',e);});
+}
+
+function save2ls(){localStorage.setItem('techo_acts',JSON.stringify(acts));}
+function esc(s){return(s||'').replace(/"/g,'&quot;');}
+function contrast(hex){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return(r*299+g*587+b*114)/1000>140?'#1D1D1B':'#fff';}
+
+function compress(file,cb){
+  var r=new FileReader();
+  r.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var M=900,w=img.width,h=img.height;
+      if(w>M){h=Math.round(h*M/w);w=M;}if(h>M){w=Math.round(w*M/h);h=M;}
+      var c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',0.72));
+    };img.src=e.target.result;
+  };r.readAsDataURL(file);
+}
+
+function renderPhotos(){
+  var el=document.getElementById('photo-list');
+  el.innerHTML=photos.map(function(p,i){
+    var thumb=p.type==='base64'?'<img src="'+p.v+'">'  :'<img src="'+esc(p.v)+'" onerror="this.style.display=\'none\'">';
+    var ctrl=p.type==='base64'?'<span class="ph-label">Imagen local</span>'
+      :'<input type="url" value="'+esc(p.v)+'" placeholder="https://..." oninput="photos['+i+'].v=this.value">';
+    return'<div class="photo-item">'+thumb+ctrl+'<button class="photo-rm" onclick="photos.splice('+i+',1);renderPhotos()">✕</button></div>';
+  }).join('');
+}
+function addPhotoUrl(){photos.push({type:'url',v:''});renderPhotos();var ins=document.querySelectorAll('#photo-list input[type=url]');if(ins.length)ins[ins.length-1].focus();}
+function handleFiles(inp){
+  var fs=Array.from(inp.files);if(!fs.length)return;
+  var p=fs.length;
+  fs.forEach(function(f){compress(f,function(d){photos.push({type:'base64',v:d});p--;if(!p)renderPhotos();});});
+  inp.value='';
+}
+
+function save(){
+  var title=document.getElementById('f-title').value.trim();
+  if(!title){alert('El título es obligatorio.');return;}
+  var act={id:editId||Date.now()+'',title:title,day:document.getElementById('f-day').value,date:document.getElementById('f-date').value.trim(),punto:document.getElementById('f-punto').value.trim(),desc:document.getElementById('f-desc').value.trim(),link:document.getElementById('f-link').value.trim(),color:pickedColor,photos:photos.filter(function(p){return p.v;}).map(function(p){return p.v;})};
+  if(editId){
+    var i=acts.findIndex(function(a){return String(a.id)===String(editId);});
+    if(i>-1)acts[i]=act;else acts.push(act);
+  } else acts.push(act);
+  try{saveActs(function(){renderLanding();renderAdminList();toast(editId?'✓ Actualizada':'✓ Guardada');cancelEdit();showTab('list');});}catch(e){alert('⚠️ Fotos muy pesadas.');return;}
+}
+
+function editAct(id){
+  // si acts está vacío, recargar primero
+  if(!acts.length){
+    loadActs(function(){ editAct(id); });
+    return;
+  }
+  var a=acts.find(function(x){return String(x.id)===String(id);});
+  if(!a){alert('No se encontró la actividad.');return;}
+  editId=id;showTab('new');
+  document.getElementById('f-title').value=a.title;
+  document.getElementById('f-day').value=a.day;
+  document.getElementById('f-date').value=a.date;
+  document.getElementById('f-punto').value=a.punto||'';
+  document.getElementById('f-desc').value=a.desc||'';
+  document.getElementById('f-link').value=a.link||'';
+  pickedColor=a.color||CD;
+  document.querySelectorAll('.swatch').forEach(function(s){s.classList.toggle('on',s.dataset.c===pickedColor);});
+  photos=(a.photos||[]).map(function(p){return{type:p.startsWith('data:')?'base64':'url',v:p};});
+  renderPhotos();
+  document.getElementById('save-btn').textContent='Guardar cambios';
+  document.getElementById('cancel-btn').style.display='';
+}
+function delAct(id){if(!confirm('¿Eliminar?'))return;acts=acts.filter(function(a){return a.id!==id;});save2ls();renderLanding();renderAdminList();toast('✓ Eliminada');}
+function cancelEdit(){
+  editId=null;['f-title','f-date','f-desc','f-link'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('f-punto').value='Ofi C. 47 885 a las 9:00hs';document.getElementById('f-day').value='SÁBADO';
+  pickedColor=CD;document.querySelectorAll('.swatch').forEach(function(s,i){s.classList.toggle('on',i===0);});
+  photos=[];renderPhotos();document.getElementById('save-btn').textContent='Guardar actividad';document.getElementById('cancel-btn').style.display='none';
+}
+
+function pickColor(el){document.querySelectorAll('.swatch').forEach(function(s){s.classList.remove('on');});el.classList.add('on');pickedColor=el.dataset.c;}
+function openAdmin(){document.getElementById('overlay').classList.add('open');if(sessionStorage.getItem('ta')){showAdmin();return;}document.getElementById('auth-section').style.display='';document.getElementById('admin-section').style.display='none';setTimeout(function(){document.getElementById('pass-input').focus();},80);}
+function closeAdmin(){document.getElementById('overlay').classList.remove('open');cancelEdit();}
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===document.getElementById('overlay'))closeAdmin();});
+document.getElementById('pass-input').addEventListener('keydown',function(e){if(e.key==='Enter')tryAuth();});
+function tryAuth(){if(document.getElementById('pass-input').value===PASS){sessionStorage.setItem('ta','1');showAdmin();}else{document.getElementById('auth-err').style.display='block';document.getElementById('pass-input').select();}}
+function showAdmin(){
+  document.getElementById('auth-section').style.display='none';
+  document.getElementById('admin-section').style.display='';
+  if(!acts.length){
+    renderAdminList();
+    loadActs(function(){renderAdminList();});
+  } else {
+    renderAdminList();
+  }
+}
+function showTab(t){['new','list'].forEach(function(id){document.getElementById('tab-'+id).classList.toggle('on',id===t);document.getElementById('pane-'+id).classList.toggle('on',id===t);});if(t==='list')renderAdminList();}
+function renderAdminList(){
+  var l=document.getElementById('admin-list'),e=document.getElementById('admin-empty');
+  if(!acts.length){l.innerHTML='';e.style.display='';return;}e.style.display='none';
+  l.innerHTML=acts.map(function(a){return'<div class="admin-item"><div class="admin-dot" style="background:'+a.color+'"></div><div class="admin-info"><div class="t">'+a.title+'</div><div class="s">'+a.day+' '+a.date+'</div></div><div class="admin-actions"><button class="btn-ghost btn-sm" data-id="'+a.id+'" data-action="edit">Editar</button><button class="btn-ghost btn-ghost-red btn-sm" data-id="'+a.id+'" data-action="del">Eliminar</button></div></div>';}).join('');
+}
+document.getElementById('admin-list').addEventListener('click',function(e){var b=e.target.closest('[data-action]');if(!b)return;if(b.dataset.action==='edit')editAct(b.dataset.id);if(b.dataset.action==='del')delAct(b.dataset.id);});
+
+function renderLanding(){
+  var el=document.getElementById('landing'),cta=document.getElementById('bottom-cta'),strip=document.getElementById('strip'),stats=document.getElementById('hero-stats');
+  if(!acts.length){el.innerHTML='<div class="empty"><div class="empty-ico">📋</div><p>No hay actividades cargadas para este fin de semana.</p></div>';cta.style.display='none';strip.style.display='none';stats.style.display='none';return;}
+  cta.style.display='block';strip.style.display='block';stats.style.display='inline-flex';
+  var groups={};
+  acts.forEach(function(a){
+    if(a.active===false) return;var k=a.day+'|'+a.date;if(!groups[k])groups[k]={label:a.day+' '+a.date,items:[]};groups[k].items.push(a);});
+  document.getElementById('stat-acts').textContent=acts.length;
+  document.getElementById('stat-days').textContent=Object.keys(groups).length;
+  var html='';
+  Object.values(groups).forEach(function(g){
+    html+='<div class="day-block"><div class="day-sep"><div class="day-sep-label">'+g.label+'</div><div class="day-sep-line"></div><div class="day-sep-count">'+g.items.length+' actividad'+(g.items.length>1?'es':'')+'</div></div><div class="cards-grid">';
+    g.items.forEach(function(a){
+      var tc=contrast(a.color);
+      var ph=(a.photos||[]).filter(Boolean);
+      var phHtml=ph.length?'<div class="act-photos">'+ph.map(function(p){return'<img src="'+p+'" loading="lazy" onerror="this.style.display=\'none\'">';}).join('')+'</div>':'<div class="act-no-photos"></div>';
+      html+='<div class="act-card">'
+        +'<div class="act-color-bar" style="background:'+a.color+'"></div>'
+        +'<div class="act-header">'
+        +'<div class="act-tag" style="background:'+a.color+';color:'+tc+'">'+a.day+' · '+a.date+'</div>'
+        +'<div class="act-title">'+a.title+'</div>'
+        +(a.punto?'<div class="act-punto">📍 '+a.punto+'</div>':'')
+        +'</div>'+phHtml
+        +'<div class="act-body">'
+        +(a.desc?'<div class="act-desc">'+a.desc+'</div>':'')
+        +(a.link?'<a class="act-btn" href="'+a.link+'" target="_blank" rel="noopener" style="background:'+a.color+';color:'+tc+'">Anotarme <span class="act-btn-arrow">→</span></a>':'')
+        +'</div></div>';
+    });
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2600);}
+
+loadActs(function(){renderLanding();});
+
+</script>
+</body>
+</html>
