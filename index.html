@@ -267,7 +267,11 @@ function saveActs(cb){
   var rows=acts.map(toRow);
   sb.from('actividades').upsert(rows,{onConflict:'id'})
     .then(function(res){
-      if(res.error)console.error('Supabase save error:',res.error);
+      if(res.error){
+        console.error('Supabase save error:',res.error);
+        toast('⚠️ Error al guardar: '+res.error.message);
+        return;
+      }
       if(cb)cb();
     });
 }
@@ -292,7 +296,7 @@ function compress(file,cb){
 function renderPhotos(){
   var el=document.getElementById('photo-list');
   el.innerHTML=photos.map(function(p,i){
-    var thumb=p.type==='base64'?'<img src="'+p.v+'">'  :'<img src="'+esc(p.v)+'" onerror="this.style.display=\'none\'">'
+    var thumb=p.type==='base64'?'<img src="'+p.v+'">'  :'<img src="'+esc(p.v)+'" onerror="this.style.display=\'none\'">';
     var ctrl=p.type==='base64'?'<span class="ph-label">Imagen local</span>'
       :'<input type="url" value="'+esc(p.v)+'" placeholder="https://..." oninput="photos['+i+'].v=this.value">';
     return'<div class="photo-item">'+thumb+ctrl+'<button class="photo-rm" onclick="photos.splice('+i+',1);renderPhotos()">✕</button></div>';
