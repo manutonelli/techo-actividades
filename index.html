@@ -234,57 +234,45 @@ label.btn-add{display:block;cursor:pointer}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 var PASS='techo2025', CD='#0092DD';
-var API='https://script.google.com/macros/s/AKfycbwQ7MK63aUGmbamCV830q1KWHSs5itcusgkdbEYEJpxU1pxp-zYA1lU0j3JTgNIrWY/exec';
+var SB_URL='https://mxiapqlqcktcsjiputwh.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14aWFwcWxxY2t0Y3NqaXB1dHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMjczNTUsImV4cCI6MjA5NzgwMzM1NX0.b2YauKJY0TlbQS90Enl26GZT4gA5CrvGhTL-M0u1Vvo';
+var sb=supabase.createClient(SB_URL,SB_KEY);
 var acts=[], editId=null, pickedColor=CD, photos=[];
 
-var SHEET_ID='1XiczKWeNiBp_Fpz_wcA5Oe9b-oPXMB77_T1pW6Il4cY';
-var SHEET_CSV='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv';
+function toRow(a){
+  return{id:a.id,title:a.title,day:a.day,date:a.date,punto:a.punto,descripcion:a.desc||a.descripcion||'',link:a.link,color:a.color,photos:JSON.stringify(a.photos||[]),active:a.active!==false};
+}
+function fromRow(r){
+  var a=Object.assign({},r);
+  a.desc=r.descripcion||'';
+  try{a.photos=JSON.parse(r.photos||'[]');}catch(e){a.photos=[];}
+  return a;
+}
 
 function loadActs(cb){
   var cached=localStorage.getItem('techo_acts');
   if(cached){acts=JSON.parse(cached);renderLanding();}
-  fetch(SHEET_CSV+'&t='+Date.now())
-    .then(function(r){return r.text();})
-    .then(function(csv){
-      var rows=csv.split('\n').filter(function(r){return r.trim();});
-      if(rows.length<2){if(cb)cb();return;}
-      var headers=parseCSVRow(rows[0]);
-      acts=rows.slice(1).map(function(row){
-        var vals=parseCSVRow(row);
-        var obj={};
-        headers.forEach(function(h,i){obj[h]=vals[i]||'';});
-        try{obj.photos=JSON.parse(obj.photos||'[]');}catch(e){obj.photos=[];}
-        return obj;
-      }).filter(function(a){return a.id;});
+  sb.from('actividades').select('*').order('id',{ascending:true})
+    .then(function(res){
+      if(res.error){console.error('Supabase load error:',res.error);if(cb)cb();return;}
+      acts=(res.data||[]).map(fromRow);
       localStorage.setItem('techo_acts',JSON.stringify(acts));
       renderLanding();
       if(cb)cb();
-    }).catch(function(){if(cb)cb();});
-}
-
-function parseCSVRow(row){
-  var result=[],cur='',inQ=false;
-  for(var i=0;i<row.length;i++){
-    var c=row[i];
-    if(c==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
-    else if(c===','&&!inQ){result.push(cur.trim());cur='';}
-    else cur+=c;
-  }
-  result.push(cur.trim());
-  return result;
+    });
 }
 
 function saveActs(cb){
   localStorage.setItem('techo_acts',JSON.stringify(acts));
-  if(cb)cb();
-  fetch(API,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({action:'save',acts:acts})
-  }).catch(function(e){console.log('Sheet sync error:',e);});
+  var rows=acts.map(toRow);
+  sb.from('actividades').upsert(rows,{onConflict:'id'})
+    .then(function(res){
+      if(res.error)console.error('Supabase save error:',res.error);
+      if(cb)cb();
+    });
 }
 
 function save2ls(){localStorage.setItem('techo_acts',JSON.stringify(acts));}
@@ -354,7 +342,13 @@ function editAct(id){
   document.getElementById('save-btn').textContent='Guardar cambios';
   document.getElementById('cancel-btn').style.display='';
 }
-function delAct(id){if(!confirm('¿Eliminar?'))return;acts=acts.filter(function(a){return a.id!==id;});save2ls();renderLanding();renderAdminList();toast('✓ Eliminada');}
+function delAct(id){
+  if(!confirm('¿Eliminar?'))return;
+  acts=acts.filter(function(a){return a.id!==id;});
+  save2ls();renderLanding();renderAdminList();
+  sb.from('actividades').delete().eq('id',id)
+    .then(function(res){if(res.error)console.error('Supabase delete error:',res.error);else toast('✓ Eliminada');});
+}
 function cancelEdit(){
   editId=null;['f-title','f-date','f-desc','f-link'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('f-punto').value='Ofi C. 47 885 a las 9:00hs';document.getElementById('f-day').value='SÁBADO';
