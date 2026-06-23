@@ -92,11 +92,11 @@ body{font-family:'Fredoka',sans-serif;background:#f5f5f5;color:var(--negro)}
 .fg .full{grid-column:1/-1}
 .fl{display:flex;flex-direction:column;gap:4px}
 .fl label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999}
-input[type=text],input[type=url],input[type=password],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;font-size:14px;font-family:'Fredoka',sans-serif;outline:none;color:var(--negro);background:white;transition:border-color .2s}
+input[type=text],input[type=url],input[type=password],input[type=date],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;font-size:14px;font-family:'Fredoka',sans-serif;outline:none;color:var(--negro);background:white;transition:border-color .2s}
 input:focus,textarea:focus,select:focus{border-color:var(--azul)}
 textarea{resize:vertical;min-height:72px}
 .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.swatch{width:32px;height:32px;border-radius:8px;cursor:pointer;border:3px solid transparent;transition:transform .15s}
+.swatch{width:32px;height:32px;border-radius:8px;cursor:pointer;border:3px solid transparent;transition:transform .15px}
 .swatch.on{border-color:#000;transform:scale(1.15)}
 .photo-list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .photo-item{display:flex;align-items:center;gap:8px;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:6px 10px}
@@ -195,8 +195,9 @@ label.btn-add{display:block;cursor:pointer}
       <div class="pane on" id="pane-new">
         <div class="fg">
           <div class="fl full"><label>Título *</label><input type="text" id="f-title" placeholder="Ej: Parada de Colectivo | Los Lapachos"></div>
-          <div class="fl"><label>Día</label><select id="f-day"><option>SÁBADO</option><option>DOMINGO</option><option>SÁBADO y DOMINGO</option></select></div>
-          <div class="fl"><label>Fecha</label><input type="text" id="f-date" placeholder="13 de Junio"></div>
+          <div class="fl"><label>Día</label><select id="f-day"><option>LUNES</option><option>MARTES</option><option>MIÉRCOLES</option><option>JUEVES</option><option>VIERNES</option><option>SÁBADO</option><option>DOMINGO</option><option>SÁBADO Y DOMINGO</option></select></div>
+          <div class="fl"><label>Fecha inicio *</label><input type="date" id="f-date1"></div>
+          <div class="fl full"><label>Fecha fin <span style="font-weight:400;text-transform:none;letter-spacing:0">(opcional, si dura 2 días)</span></label><input type="date" id="f-date2"></div>
           <div class="fl full"><label>Punto de encuentro</label><input type="text" id="f-punto" value="Ofi C. 47 885 a las 9:00hs"></div>
           <div class="fl full"><label>Descripción</label><textarea id="f-desc" placeholder="Breve descripción..."></textarea></div>
           <div class="fl full"><label>Link de inscripción</label><input type="url" id="f-link" placeholder="https://actividades.techo.org/..."></div>
@@ -310,10 +311,36 @@ function handleFiles(inp){
   inp.value='';
 }
 
+var MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+function fmtDate(iso){if(!iso)return'';var p=iso.split('-');return parseInt(p[2],10)+' DE '+MESES[parseInt(p[1],10)-1];}
+function buildDate(){
+  var d1=document.getElementById('f-date1').value;
+  var d2=document.getElementById('f-date2').value;
+  if(!d1)return'';
+  if(!d2||d2===d1)return fmtDate(d1);
+  var p1=d1.split('-'),p2=d2.split('-');
+  if(p1[1]===p2[1])return parseInt(p1[2],10)+' Y '+parseInt(p2[2],10)+' DE '+MESES[parseInt(p1[1],10)-1];
+  return fmtDate(d1)+' Y '+fmtDate(d2);
+}
+function dateToIso(label){
+  if(!label)return['',''];
+  var m=label.match(/^(\d+) Y (\d+) DE ([A-ZÁÉÍÓÚÜ]+)$/);
+  if(m){
+    var mes=String(MESES.indexOf(m[3])+1).padStart(2,'0');
+    var y=new Date().getFullYear();
+    return[y+'-'+mes+'-'+String(m[1]).padStart(2,'0'),y+'-'+mes+'-'+String(m[2]).padStart(2,'0')];
+  }
+  var m2=label.match(/^(\d+) DE ([A-ZÁÉÍÓÚÜ]+)/);
+  if(m2){var mes=String(MESES.indexOf(m2[2])+1).padStart(2,'0');var y=new Date().getFullYear();return[y+'-'+mes+'-'+String(m2[1]).padStart(2,'0'),''];}
+  return['',''];
+}
+
 function save(){
   var title=document.getElementById('f-title').value.trim();
   if(!title){alert('El título es obligatorio.');return;}
-  var act={id:editId||Date.now()+'',title:title,day:document.getElementById('f-day').value,date:document.getElementById('f-date').value.trim(),punto:document.getElementById('f-punto').value.trim(),desc:document.getElementById('f-desc').value.trim(),link:document.getElementById('f-link').value.trim(),color:pickedColor,photos:photos.filter(function(p){return p.v;}).map(function(p){return p.v;})};
+  var date=buildDate();
+  if(!date){alert('La fecha de inicio es obligatoria.');return;}
+  var act={id:editId||Date.now()+'',title:title,day:document.getElementById('f-day').value,date:date,punto:document.getElementById('f-punto').value.trim(),desc:document.getElementById('f-desc').value.trim(),link:document.getElementById('f-link').value.trim(),color:pickedColor,photos:photos.filter(function(p){return p.v;}).map(function(p){return p.v;})};
   if(editId){
     var i=acts.findIndex(function(a){return String(a.id)===String(editId);});
     if(i>-1)acts[i]=act;else acts.push(act);
@@ -331,7 +358,9 @@ function editAct(id){
   editId=id;showTab('new');
   document.getElementById('f-title').value=a.title;
   document.getElementById('f-day').value=a.day;
-  document.getElementById('f-date').value=a.date;
+  var iso=dateToIso(a.date||'');
+  document.getElementById('f-date1').value=iso[0];
+  document.getElementById('f-date2').value=iso[1];
   document.getElementById('f-punto').value=a.punto||'';
   document.getElementById('f-desc').value=a.desc||'';
   document.getElementById('f-link').value=a.link||'';
@@ -350,7 +379,7 @@ function delAct(id){
     .then(function(res){if(res.error)console.error('Supabase delete error:',res.error);else toast('✓ Eliminada');});
 }
 function cancelEdit(){
-  editId=null;['f-title','f-date','f-desc','f-link'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  editId=null;['f-title','f-date1','f-date2','f-desc','f-link'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('f-punto').value='Ofi C. 47 885 a las 9:00hs';document.getElementById('f-day').value='SÁBADO';
   pickedColor=CD;document.querySelectorAll('.swatch').forEach(function(s,i){s.classList.toggle('on',i===0);});
   photos=[];renderPhotos();document.getElementById('save-btn').textContent='Guardar actividad';document.getElementById('cancel-btn').style.display='none';
