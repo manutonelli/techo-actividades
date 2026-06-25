@@ -144,14 +144,29 @@ label.btn-add{display:block;cursor:pointer}
 .admin-actions{display:flex;gap:6px}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--negro);color:white;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;padding:12px 28px;border-radius:12px;border:2px solid var(--negro);box-shadow:3px 3px 0 rgba(0,0,0,.3);z-index:999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:768px){
+@media(max-width:600px){
   .cards-grid{grid-template-columns:1fr}
   .act-title{font-size:18px}
-  .hero-stats{flex-direction:column;gap:10px}
+  .hero-stats{flex-direction:row;gap:8px;justify-content:center;flex-wrap:wrap}
+  .hero-stat{padding:10px 16px;flex:1;min-width:100px;max-width:160px}
+  .hero-stat-num{font-size:26px}
+  .hero-title{letter-spacing:2px;font-size:clamp(32px,11vw,52px)}
+  .hero-inner-top{gap:8px;flex-direction:column}
+  .hero-badge{font-size:11px;padding:5px 12px}
+  .hero-logo{height:46px}
+  .fg{grid-template-columns:1fr}.fg .full{grid-column:1}
+  .admin-body{padding:14px}
+  .topbar{padding:0 14px}
+  .hero-night-btn{width:44px;height:44px;font-size:18px;top:12px;right:12px}
+  .hero-content{padding:28px 14px 40px}
+  .card-list{padding:28px 14px 48px}
+  .day-sep-label{font-size:10px;padding:5px 10px}
+}
+@media(min-width:601px) and (max-width:768px){
+  .hero-title{letter-spacing:6px;font-size:clamp(42px,10vw,68px)}
   .fg{grid-template-columns:1fr}.fg .full{grid-column:1}
   .admin-body{padding:16px}
   .topbar{padding:0 16px}
-  .hero-night-btn{width:46px;height:46px;font-size:20px}
 }
 </style>
 </head>
