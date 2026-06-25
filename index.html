@@ -10,17 +10,17 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --azul:#0092DD;--amarillo:#FDC533;--verde:#2FAC66;--rosa:#E94362;--negro:#1D1D1B;
-  --bg:#faf9f5;--topbar-bg:#fff;--card-bg:#fff;--card-border:#1D1D1B;--card-text:#1D1D1B;
+  --bg:#faf9f5;--topbar-bg:#0092DD;--card-bg:#fff;--card-border:#1D1D1B;--card-text:#1D1D1B;
   --card-punto:#666;--card-desc:#444;
 }
 body{font-family:'Fredoka',sans-serif;background:var(--bg);color:var(--negro);transition:background .3s}
 body.night{
-  --bg:#181a1b;--topbar-bg:#1e2022;--card-bg:#242729;--card-border:#3a3d40;--card-text:#f0ede6;
+  --bg:#181a1b;--topbar-bg:#1a2a35;--card-bg:#242729;--card-border:#3a3d40;--card-text:#f0ede6;
   --card-punto:#aaa;--card-desc:#bbb;
 }
 
 /* TOPBAR */
-.topbar{background:var(--topbar-bg);height:70px;display:flex;align-items:center;padding:0 26px;position:sticky;top:0;z-index:100;border-bottom:2.5px solid var(--card-border);transition:background .3s,border-color .3s}
+.topbar{background:var(--topbar-bg);height:70px;display:flex;align-items:center;padding:0 26px;position:sticky;top:0;z-index:100;border-bottom:2.5px solid rgba(0,0,0,0.15);transition:background .3s,border-color .3s}
 .logo-img{height:42px;width:auto}
 
 /* HERO */
