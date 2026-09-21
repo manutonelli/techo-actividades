@@ -96,7 +96,7 @@
     .modal-head h3{font-size:44px;line-height:1;margin:8px 0 0}
     .close{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:var(--yellow);cursor:pointer;font-size:21px;flex:0 0 auto}
     .modal-body{padding:32px}
-    .modal-body p{font-size:18px;line-height:1.6;margin:0}
+    .modal-body p{font-size:18px;line-height:1.6;margin:0;white-space:pre-line}
     .coming{margin-top:26px;border:2px dashed var(--line);border-radius:16px;padding:18px;background:#fff;font-size:14px}
     @media(max-width:820px){
       .hero{min-height:760px}.hero-map{right:-2%;top:185px;width:55vw;height:490px;opacity:.3}.nav{padding:20px}.brand span{display:none}.brand img{width:96px}
@@ -149,7 +149,7 @@
       <div>
         <h2>Cada barrio tiene una historia que merece ser contada.</h2>
         <p class="intro-copy">Ocho barrios forman hoy la comunidad de TECHO La Plata. Este espacio reúne su identidad, su recorrido y el trabajo que construimos en conjunto.</p>
-        <div class="intro-note">Versión de diseño: los nombres ya están cargados. Las fotos y los textos de cada barrio quedan preparados para completar.</div>
+        <div class="intro-note">Los nombres ya están cargados y empezamos a sumar la información disponible de cada comunidad.</div>
       </div>
     </section>
 
@@ -181,7 +181,7 @@
     </div>
     <div class="modal-body">
       <p id="modal-description"></p>
-      <div class="coming">Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.</div>
+      <div class="coming" id="modal-coming">Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.</div>
     </div>
   </dialog>
 
@@ -192,10 +192,10 @@
       { nombre:"Nueva Esperanza", zona:"La Plata", color:"#e87db3", foto:"" },
       { nombre:"Los Lapachos", zona:"La Plata", color:"#2fac66", foto:"" },
       { nombre:"Sector II", zona:"La Plata", color:"#fdc533", foto:"" },
-      { nombre:"Sector III", zona:"La Plata", color:"#954b97", foto:"" },
+      { nombre:"Sector III · Santa María", zona:"La Plata", color:"#954b97", foto:"", info:"Coordinadoras de comunidad: Dai y Mili.\n\nProyectos 2026:\n• Mejorado de plaza, colocación de luminaria y mobiliario.\n• Refacción del contenedor luego del incendio.\n• Inicio del proyecto de veredas." },
       { nombre:"Sector IV", zona:"La Plata", color:"#e87db3", foto:"" },
       { nombre:"Evita", zona:"La Plata", color:"#2fac66", foto:"" },
-      { nombre:"El Hornero", zona:"La Plata", color:"#fdc533", foto:"" }
+      { nombre:"El Hornero", zona:"La Plata", color:"#fdc533", foto:"", info:"Mesa inactiva desde febrero de 2026.\n\nÚltimo proyecto: mejorado de plaza, realizado en agosto de 2025." }
     ];
 
     const gradients = [
@@ -218,11 +218,11 @@
       return `<button class="card" style="--accent:${b.color};--image:${background}" onclick="abrirBarrio(${i})">
         <div class="visual"></div>
         <span class="num">${String(i+1).padStart(2,"0")}</span>
-        <span class="placeholder">${b.foto ? "Conocé el barrio" : "Foto a definir"}</span>
+        <span class="placeholder">${b.info ? "Info disponible" : (b.foto ? "Conocé el barrio" : "Foto a definir")}</span>
         <div class="card-content">
           <div class="zone">${esc(b.zona)}</div>
           <h3>${esc(b.nombre)}</h3>
-          <div class="card-footer"><span>Ver presentación</span><span class="arrow">↗</span></div>
+          <div class="card-footer"><span>${b.info ? "Ver información" : "Ver presentación"}</span><span class="arrow">↗</span></div>
         </div>
       </button>`;
     }).join("");
@@ -231,8 +231,11 @@
       const barrio = barrios[index];
       document.querySelector("#modal-zone").textContent = barrio.zona;
       document.querySelector("#modal-title").textContent = barrio.nombre;
-      document.querySelector("#modal-description").textContent =
+      document.querySelector("#modal-description").textContent = barrio.info ||
         "Acá va a ir la presentación de " + barrio.nombre + ". Dejamos el espacio preparado para contar su identidad y el proceso de trabajo comunitario.";
+      document.querySelector("#modal-coming").textContent = barrio.info
+        ? "Información inicial. Queda preparado el espacio para sumar historia, referentes, nuevos hitos y galería de fotos."
+        : "Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.";
       detalle.showModal();
     }
 
