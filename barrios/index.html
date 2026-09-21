@@ -56,19 +56,6 @@
     .intro-copy{font-size:19px;line-height:1.6;margin:4px 0 0;max-width:600px}
     .intro-note{position:relative;margin-top:24px;padding:17px 20px;border:2px solid var(--ink);background:#fff;font-size:14px;box-shadow:5px 5px 0 var(--yellow);transform:rotate(-.5deg)}
     .intro-note::before{content:"";position:absolute;width:54px;height:15px;background:rgba(232,125,179,.75);top:-9px;left:42px;transform:rotate(-4deg)}
-    .stats{width:min(1180px,calc(100% - 40px));margin:28px auto 72px}
-    .stats-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
-    .stats-head h2{font-size:clamp(38px,5vw,66px);line-height:.95;margin:0;letter-spacing:-.04em;color:#a82f6e}
-    .stats-head p{max-width:410px;margin:0;font-size:16px;line-height:1.5}
-    .stats-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
-    .stat-card{grid-column:span 3;min-height:190px;border:3px solid var(--ink);background:#fff;padding:22px;box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column;justify-content:space-between}
-    .stat-card:first-child{grid-column:span 4;background:var(--pink);color:#fff;transform:rotate(-.7deg)}
-    .stat-card:nth-child(2){grid-column:span 4;background:var(--yellow);transform:rotate(.5deg)}
-    .stat-card:nth-child(3){grid-column:span 4;background:var(--blue);color:#fff;transform:rotate(-.3deg)}
-    .stat-card:nth-child(n+4){grid-column:span 4}
-    .stat-num{font-size:clamp(55px,7vw,88px);font-weight:700;line-height:.78;letter-spacing:-.06em}
-    .stat-label{font-size:17px;line-height:1.12;font-weight:600;max-width:190px}
-    .stat-year{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;opacity:.7;margin-top:8px}
     .map-block{margin-top:44px;display:grid;grid-template-columns:.7fr 1.3fr;gap:38px;align-items:center;background:#fff;border:3px solid var(--ink);padding:34px;box-shadow:8px 8px 0 var(--pink)}
     .map-copy h3{font-size:clamp(38px,5vw,66px);line-height:.94;margin:0;letter-spacing:-.04em}
     .map-copy p{font-size:17px;line-height:1.55;margin:18px 0 0;max-width:390px}
@@ -115,7 +102,6 @@
       .hero{min-height:760px}.hero-map{right:-2%;top:185px;width:55vw;height:490px;opacity:.3}.nav{padding:20px}.brand span{display:none}.brand img{width:96px}
       .hero-inner{padding:150px 20px 70px}.hero-bottom{grid-template-columns:1fr;gap:32px}.hero-count{justify-self:start}
       .intro{grid-template-columns:1fr;gap:24px;padding-top:74px}
-      .stats-head{align-items:flex-start;flex-direction:column}.stats-grid{grid-template-columns:1fr 1fr}.stat-card,.stat-card:first-child,.stat-card:nth-child(2),.stat-card:nth-child(3),.stat-card:nth-child(n+4){grid-column:auto;min-height:170px}
       .map-block{grid-template-columns:1fr;padding:24px}
       .grid{display:block}.card,.card:nth-child(n){min-height:420px;margin-bottom:24px;width:100%}
       .cta-inner{grid-template-columns:1fr}.ig{justify-self:start}footer{align-items:flex-start;flex-direction:column}
@@ -123,7 +109,6 @@
     @media(max-width:480px){
       h1{font-size:57px}h1 span{margin-left:18px}.hero{min-height:720px}.hero-map{right:-14%;top:250px;width:88vw;height:420px;opacity:.2}.hero-count strong{font-size:62px}
       .back{font-size:0;width:42px;height:42px;padding:0;justify-content:center}.back::before{content:"←";font-size:20px}
-      .stats-grid{grid-template-columns:1fr}.stat-card,.stat-card:first-child,.stat-card:nth-child(n){min-height:150px}
       .card{min-height:390px;border-radius:20px}.card-content{padding:24px}.card h3{font-size:39px}
       .placeholder{top:20px;right:18px}.num{top:18px;left:18px}
     }
@@ -165,21 +150,6 @@
         <h2>Cada barrio tiene una historia que merece ser contada.</h2>
         <p class="intro-copy">Ocho barrios forman hoy la comunidad de TECHO La Plata. Este espacio reúne su identidad, su recorrido y el trabajo que construimos en conjunto.</p>
         <div class="intro-note">Versión de diseño: los nombres ya están cargados. Las fotos y los textos de cada barrio quedan preparados para completar.</div>
-      </div>
-    </section>
-
-    <section class="stats" aria-labelledby="stats-title">
-      <div class="stats-head">
-        <h2 id="stats-title">La sede<br>en números.</h2>
-        <p>Una foto de la comunidad que sostiene el trabajo territorial de TECHO La Plata.</p>
-      </div>
-      <div class="stats-grid">
-        <article class="stat-card"><div class="stat-num">14</div><div><div class="stat-label">años marcando la diferencia</div><div class="stat-year">TECHO La Plata</div></div></article>
-        <article class="stat-card"><div class="stat-num">6</div><div class="stat-label">mesas de trabajo activas</div></article>
-        <article class="stat-card"><div class="stat-num">4</div><div class="stat-label">coordinaciones de comunidad</div></article>
-        <article class="stat-card"><div class="stat-num">32</div><div class="stat-label">personas voluntarias en equipo fijo</div></article>
-        <article class="stat-card"><div class="stat-num">69</div><div><div class="stat-label">viviendas planificadas</div><div class="stat-year">Durante 2026</div></div></article>
-        <article class="stat-card"><div class="stat-num">1</div><div class="stat-label">empresa aliada</div></article>
       </div>
     </section>
 
