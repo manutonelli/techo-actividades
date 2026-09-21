@@ -250,7 +250,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       return `<button class="card" style="--accent:${b.color};--image:${background}" onclick="abrirBarrio(${i})">
         <div class="visual"></div>
         <span class="num">${String(i+1).padStart(2,"0")}</span>
-        <span class="placeholder">${b.info ? "Info disponible" : (b.foto ? "Conocé el barrio" : "Foto a definir")}</span>
+        ${b.info ? "" : `<span class="placeholder">Historia a definir</span>`}
         <div class="card-content">
           <div class="zone">${esc(b.zona)}</div>
           <h3>${esc(b.nombre)}</h3>
