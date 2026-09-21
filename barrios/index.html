@@ -106,6 +106,14 @@
     .modal-body p{font-size:18px;line-height:1.6;margin:0;white-space:pre-line}
     .mesa-body strong{display:block;margin-top:22px;font-size:20px;color:#a82f6e}
     .coming{margin-top:26px;border:2px dashed var(--line);border-radius:16px;padding:18px;background:#fff;font-size:14px}
+    .activities{margin-top:28px;padding-top:24px;border-top:2px dashed var(--line)}
+    .activities[hidden]{display:none}
+    .activities h4{font-size:24px;margin:0 0 14px}
+    .activity-list{display:grid;gap:12px}
+    .activity{padding:16px;border:2px solid var(--ink);border-radius:14px;background:#fff}
+    .activity h5{font-size:19px;margin:0}
+    .activity p{font-size:15px;line-height:1.45;margin:7px 0 14px;white-space:normal}
+    .activity a{display:inline-flex;align-items:center;gap:7px;border-radius:999px;background:var(--yellow);border:2px solid var(--ink);padding:9px 13px;font-size:13px;font-weight:700;text-decoration:none}
     @media(max-width:820px){
       .hero{min-height:700px;align-items:stretch}.hero-map{right:-2%;top:185px;width:55vw;height:490px;opacity:.22}.nav{padding:20px}.brand span{display:none}.brand img{width:96px}
       .hero-inner{padding:138px 20px 54px;display:flex;flex-direction:column;justify-content:center}.hero-bottom{grid-template-columns:1fr;gap:26px;margin-top:38px}.hero-count{justify-self:start}
@@ -199,6 +207,10 @@
     <div class="modal-body">
       <p id="modal-description"></p>
       <div class="coming" id="modal-coming">Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.</div>
+      <section class="activities" id="modal-activities" hidden>
+        <h4>Actividades</h4>
+        <div class="activity-list" id="modal-activity-list"></div>
+      </section>
     </div>
   </dialog>
 
@@ -217,6 +229,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
     </div>
   </dialog>
 
+  <script src="config.js"></script>
   <script>
     const barrios = [
       { nombre:"Jazmín", zona:"La Plata", color:"#fdc533", foto:"", info:"El trabajo de TECHO junto a la comunidad comenzó en 2022. Desde entonces, la Mesa de Trabajo permitió reconocer necesidades vinculadas con la iluminación, las calles, las veredas y el drenaje del agua.\n\nEse recorrido dio lugar a distintas iniciativas barriales y a un nuevo desafío: avanzar con el zanjeo y el entubado con caños de hormigón para mejorar el escurrimiento y las condiciones de las calles." },
@@ -243,6 +256,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
     const grid = document.querySelector("#barrios");
     const detalle = document.querySelector("#detalle");
     const mesa = document.querySelector("#mesa");
+    const activitiesByBarrio = new Map();
     const esc = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
 
     grid.innerHTML = barrios.map((b,i) => {
@@ -268,6 +282,15 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       const aviso = document.querySelector("#modal-coming");
       aviso.hidden = Boolean(barrio.info);
       aviso.textContent = "Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.";
+      const activities = activitiesByBarrio.get(barrio.nombre) || [];
+      const activitiesSection = document.querySelector("#modal-activities");
+      document.querySelector("#modal-activity-list").innerHTML = activities.map(activity => `
+        <article class="activity">
+          <h5>${esc(activity.nombre)}</h5>
+          <p>${esc(activity.descripcion)}</p>
+          <a href="${esc(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir álbum y subir fotos ↗</a>
+        </article>`).join("");
+      activitiesSection.hidden = activities.length === 0;
       detalle.showModal();
     }
 
@@ -284,6 +307,24 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       const box = mesa.getBoundingClientRect();
       if(event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) mesa.close();
     });
+
+    async function cargarActividades(){
+      const apiUrl = window.BARRIOS_API_URL;
+      if(!apiUrl) return;
+      try{
+        const response = await fetch(`${apiUrl}?action=list`);
+        if(!response.ok) throw new Error("No se pudieron cargar las actividades");
+        const payload = await response.json();
+        (payload.activities || []).forEach(activity => {
+          if(!activitiesByBarrio.has(activity.barrio)) activitiesByBarrio.set(activity.barrio, []);
+          activitiesByBarrio.get(activity.barrio).push(activity);
+        });
+      }catch(error){
+        console.warn("Las actividades no están disponibles en este momento.", error);
+      }
+    }
+
+    cargarActividades();
   </script>
 </body>
 </html>

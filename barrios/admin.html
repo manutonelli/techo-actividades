@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administrar actividades · TECHO La Plata</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}:root{--blue:#0092dd;--yellow:#fdc533;--pink:#e87db3;--ink:#1d1d1b;--paper:#f7f4ec}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Fredoka",sans-serif}
+    main{width:min(760px,calc(100% - 32px));margin:48px auto}
+    .back{color:inherit;font-weight:700;text-decoration:none}.panel{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:clamp(22px,5vw,42px);box-shadow:10px 10px 0 var(--blue)}
+    h1{font-size:clamp(38px,7vw,64px);line-height:.95;margin:0 0 12px}p{line-height:1.5}.notice{padding:13px;border:2px dashed var(--ink);border-radius:12px;background:#fff7d4}
+    form{display:grid;gap:18px;margin-top:28px}label{display:grid;gap:7px;font-weight:700}input,select,textarea{width:100%;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;background:#fff;font:inherit}textarea{min-height:100px;resize:vertical}
+    button{border:2px solid var(--ink);border-radius:999px;padding:13px 18px;background:var(--yellow);font:inherit;font-weight:700;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}button:disabled{opacity:.55;cursor:wait}
+    #result{min-height:24px;font-weight:600}.error{color:#a52424}.success{color:#087947}
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="./">← Volver a barrios</a>
+    <section class="panel">
+      <h1>Administrar actividades</h1>
+      <p>Agregá una actividad y vinculala con su álbum colaborativo de Google Fotos.</p>
+      <div class="notice" id="setup-notice" hidden>La API todavía no está configurada en <strong>config.js</strong>.</div>
+      <form id="activity-form">
+        <label>Barrio
+          <select name="barrio" required>
+            <option value="">Seleccionar</option>
+            <option>Jazmín</option><option>Nueva Esperanza</option><option>Los Lapachos</option><option>Sector II</option>
+            <option>Sector III · Santa María</option><option>Sector IV · Santa María</option><option>Evita</option><option>El Hornero</option>
+          </select>
+        </label>
+        <label>Nombre de la actividad<input name="nombre" maxlength="80" required></label>
+        <label>Descripción breve<textarea name="descripcion" maxlength="280" required></textarea></label>
+        <label>Enlace al álbum de Google Fotos<input name="albumUrl" type="url" placeholder="https://photos.app.goo.gl/..." required></label>
+        <label>Contraseña de administración<input name="password" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Guardar actividad</button>
+        <div id="result" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script>
+    const apiUrl = window.BARRIOS_API_URL;
+    const form = document.querySelector("#activity-form");
+    const result = document.querySelector("#result");
+    if(!apiUrl){
+      document.querySelector("#setup-notice").hidden = false;
+      form.querySelector("button").disabled = true;
+    }
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = form.querySelector("button");
+      button.disabled = true; result.className = ""; result.textContent = "Guardando…";
+      const data = Object.fromEntries(new FormData(form));
+      try{
+        const response = await fetch(apiUrl, {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"create",...data})});
+        const payload = await response.json();
+        if(!payload.ok) throw new Error(payload.error || "No se pudo guardar la actividad");
+        form.reset(); result.className = "success"; result.textContent = "Actividad guardada.";
+      }catch(error){
+        result.className = "error"; result.textContent = error.message;
+      }finally{button.disabled = false}
+    });
+  </script>
+</body>
+</html>
