@@ -10,22 +10,36 @@
   <style>
     *{box-sizing:border-box}:root{--blue:#0092dd;--yellow:#fdc533;--pink:#e87db3;--ink:#1d1d1b;--paper:#f7f4ec}
     body{margin:0;background:var(--paper);color:var(--ink);font-family:"Fredoka",sans-serif}
-    main{width:min(760px,calc(100% - 32px));margin:48px auto}
+    main{width:min(920px,calc(100% - 32px));margin:48px auto}
     .back{color:inherit;font-weight:700;text-decoration:none}.panel{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:clamp(22px,5vw,42px);box-shadow:10px 10px 0 var(--blue)}
     h1{font-size:clamp(38px,7vw,64px);line-height:.95;margin:0 0 12px}p{line-height:1.5}.notice{padding:13px;border:2px dashed var(--ink);border-radius:12px;background:#fff7d4}
     form{display:grid;gap:18px;margin-top:28px}label{display:grid;gap:7px;font-weight:700}input,select,textarea{width:100%;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;background:#fff;font:inherit}textarea{min-height:100px;resize:vertical}
     button{border:2px solid var(--ink);border-radius:999px;padding:13px 18px;background:var(--yellow);font:inherit;font-weight:700;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}button:disabled{opacity:.55;cursor:wait}
-    #result{min-height:24px;font-weight:600}.error{color:#a52424}.success{color:#087947}
+    #result,#login-result{min-height:24px;font-weight:600}.error{color:#a52424}.success{color:#087947}[hidden]{display:none!important}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px}.logout,.secondary,.danger{box-shadow:none;padding:9px 13px;font-size:13px}.secondary{background:#fff}.danger{background:#ffd6d6}
+    .activities{margin-top:38px;padding-top:28px;border-top:2px dashed rgba(29,29,27,.25)}.activities h2{font-size:30px;margin:0 0 16px}.activity-list{display:grid;gap:12px}.activity{border:2px solid var(--ink);border-radius:14px;padding:16px;background:#fff}.activity-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.activity h3{margin:0;font-size:20px}.activity small{display:block;margin-top:4px;color:#0067a6;font-weight:700}.activity p{margin:10px 0;white-space:pre-wrap}.activity-actions{display:flex;gap:8px;flex-wrap:wrap}.empty{padding:18px;border:2px dashed rgba(29,29,27,.3);border-radius:14px}
   </style>
 </head>
 <body>
   <main>
     <a class="back" href="./">← Volver a barrios</a>
-    <section class="panel">
-      <h1>Administrar actividades</h1>
-      <p>Agregá una actividad y vinculala con su álbum colaborativo de Google Fotos.</p>
-      <div class="notice" id="setup-notice" hidden>La API todavía no está configurada en <strong>config.js</strong>.</div>
+    <section class="panel" id="login-panel">
+      <h1>Acceso administrativo</h1>
+      <p>Ingresá la contraseña para administrar las actividades de todos los barrios.</p>
+      <div class="notice" id="setup-notice" hidden>El panel todavía no está vinculado con su base de datos.</div>
+      <form id="login-form">
+        <label>Contraseña<input name="password" type="password" autocomplete="current-password" required autofocus></label>
+        <button type="submit">Ingresar</button>
+        <div id="login-result" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+    <section class="panel" id="admin-panel" hidden>
+      <div class="toolbar">
+        <div><h1>Administrar actividades</h1><p>Agregá, editá o eliminá actividades de cualquier barrio.</p></div>
+        <button class="logout" id="logout" type="button">Cerrar sesión</button>
+      </div>
       <form id="activity-form">
+        <input name="id" type="hidden">
         <label>Barrio
           <select name="barrio" required>
             <option value="">Seleccionar</option>
@@ -36,35 +50,102 @@
         <label>Nombre de la actividad<input name="nombre" maxlength="80" required></label>
         <label>Descripción breve<textarea name="descripcion" maxlength="280" required></textarea></label>
         <label>Enlace al álbum de Google Fotos<input name="albumUrl" type="url" placeholder="https://photos.app.goo.gl/..." required></label>
-        <label>Contraseña de administración<input name="password" type="password" autocomplete="current-password" required></label>
-        <button type="submit">Guardar actividad</button>
+        <div class="activity-actions"><button type="submit">Guardar actividad</button><button class="secondary" id="cancel-edit" type="button" hidden>Cancelar edición</button></div>
         <div id="result" role="status" aria-live="polite"></div>
       </form>
+      <section class="activities">
+        <h2>Actividades cargadas</h2>
+        <div class="activity-list" id="activity-list"></div>
+      </section>
     </section>
   </main>
   <script src="config.js"></script>
   <script>
     const apiUrl = window.BARRIOS_API_URL;
+    const loginPanel = document.querySelector("#login-panel");
+    const adminPanel = document.querySelector("#admin-panel");
+    const loginForm = document.querySelector("#login-form");
+    const loginResult = document.querySelector("#login-result");
     const form = document.querySelector("#activity-form");
     const result = document.querySelector("#result");
+    const list = document.querySelector("#activity-list");
+    const cancelEdit = document.querySelector("#cancel-edit");
+    let password = "";
+    let activities = [];
     if(!apiUrl){
       document.querySelector("#setup-notice").hidden = false;
-      form.querySelector("button").disabled = true;
+      loginForm.querySelector("button").disabled = true;
     }
+
+    async function request(body){
+      const response = await fetch(apiUrl, {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,password})});
+      const payload = await response.json();
+      if(!payload.ok) throw new Error(payload.error || "No se pudo completar la operación");
+      return payload;
+    }
+
+    loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      password = new FormData(loginForm).get("password");
+      const button = loginForm.querySelector("button");
+      button.disabled = true; loginResult.className = ""; loginResult.textContent = "Ingresando…";
+      try{
+        await loadActivities();
+        loginPanel.hidden = true; adminPanel.hidden = false; loginResult.textContent = "";
+      }catch(error){
+        password = ""; loginResult.className = "error"; loginResult.textContent = error.message;
+      }finally{button.disabled = false}
+    });
+
+    async function loadActivities(){
+      const payload = await request({action:"adminList"});
+      activities = payload.activities || [];
+      renderActivities();
+    }
+
+    function renderActivities(){
+      if(!activities.length){list.innerHTML = '<div class="empty">Todavía no hay actividades cargadas.</div>';return}
+      list.innerHTML = activities.map(activity => `<article class="activity">
+        <div class="activity-head"><div><h3>${escapeHtml(activity.nombre)}</h3><small>${escapeHtml(activity.barrio)}</small></div></div>
+        <p>${escapeHtml(activity.descripcion)}</p>
+        <div class="activity-actions"><button class="secondary" type="button" data-edit="${escapeHtml(activity.id)}">Editar</button><button class="danger" type="button" data-delete="${escapeHtml(activity.id)}">Eliminar</button><a href="${escapeHtml(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir álbum ↗</a></div>
+      </article>`).join("");
+    }
+
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+
     form.addEventListener("submit", async event => {
       event.preventDefault();
       const button = form.querySelector("button");
       button.disabled = true; result.className = ""; result.textContent = "Guardando…";
       const data = Object.fromEntries(new FormData(form));
       try{
-        const response = await fetch(apiUrl, {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"create",...data})});
-        const payload = await response.json();
-        if(!payload.ok) throw new Error(payload.error || "No se pudo guardar la actividad");
-        form.reset(); result.className = "success"; result.textContent = "Actividad guardada.";
+        await request({action:data.id ? "update" : "create",...data});
+        resetForm(); await loadActivities(); result.className = "success"; result.textContent = "Actividad guardada.";
       }catch(error){
         result.className = "error"; result.textContent = error.message;
       }finally{button.disabled = false}
     });
+
+    list.addEventListener("click", async event => {
+      const editId = event.target.dataset.edit;
+      const deleteId = event.target.dataset.delete;
+      if(editId){
+        const activity = activities.find(item => item.id === editId);
+        if(!activity) return;
+        for(const key of ["id","barrio","nombre","descripcion","albumUrl"]) form.elements[key].value = activity[key];
+        cancelEdit.hidden = false; form.scrollIntoView({behavior:"smooth"});
+      }
+      if(deleteId && confirm("¿Eliminar esta actividad?")){
+        event.target.disabled = true;
+        try{await request({action:"delete",id:deleteId});await loadActivities()}
+        catch(error){result.className="error";result.textContent=error.message}
+      }
+    });
+
+    function resetForm(){form.reset();form.elements.id.value="";cancelEdit.hidden=true}
+    cancelEdit.addEventListener("click",resetForm);
+    document.querySelector("#logout").addEventListener("click",()=>{password="";activities=[];resetForm();adminPanel.hidden=true;loginPanel.hidden=false;loginForm.reset()});
   </script>
 </body>
 </html>
