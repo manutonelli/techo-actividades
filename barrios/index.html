@@ -56,13 +56,6 @@
     .intro-copy{font-size:19px;line-height:1.6;margin:4px 0 0;max-width:600px}
     .intro-note{position:relative;margin-top:24px;padding:17px 20px;border:2px solid var(--ink);background:#fff;font-size:14px;box-shadow:5px 5px 0 var(--yellow);transform:rotate(-.5deg)}
     .intro-note::before{content:"";position:absolute;width:54px;height:15px;background:rgba(232,125,179,.75);top:-9px;left:42px;transform:rotate(-4deg)}
-    .photo-story{width:min(1180px,calc(100% - 40px));margin:14px auto 100px;display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:22px;align-items:center}
-    .story-photo{position:relative;background:#fff;padding:12px 12px 54px;border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink)}
-    .story-photo:first-child{transform:rotate(-2deg)}.story-photo:nth-child(2){transform:rotate(1deg)}.story-photo:last-child{transform:rotate(-1deg)}
-    .story-photo img{display:block;width:100%;height:360px;object-fit:cover;filter:saturate(.92)}
-    .story-photo:first-child img,.story-photo:last-child img{height:420px}
-    .story-photo span{position:absolute;left:18px;bottom:15px;font-size:14px;font-weight:700;color:#954b97}
-    .story-photo::after{content:"";position:absolute;width:72px;height:19px;background:rgba(253,197,51,.84);top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg)}
     .stats{width:min(1180px,calc(100% - 40px));margin:28px auto 72px}
     .stats-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
     .stats-head h2{font-size:clamp(38px,5vw,66px);line-height:.95;margin:0;letter-spacing:-.04em;color:#a82f6e}
@@ -131,7 +124,6 @@
     @media(max-width:480px){
       h1{font-size:57px}h1 span{margin-left:18px}.hero{min-height:620px}.hero-count strong{font-size:62px}
       .back{font-size:0;width:42px;height:42px;padding:0;justify-content:center}.back::before{content:"←";font-size:20px}
-      .photo-story{display:block}.story-photo,.story-photo:last-child{width:100%;margin-bottom:24px}.story-photo img,.story-photo:first-child img,.story-photo:last-child img{height:320px}
       .stats-grid{grid-template-columns:1fr}.stat-card,.stat-card:first-child,.stat-card:nth-child(n){min-height:150px}
       .card{min-height:390px;border-radius:20px}.card-content{padding:24px}.card h3{font-size:39px}
       .placeholder{top:20px;right:18px}.num{top:18px;left:18px}
@@ -175,12 +167,6 @@
         <p class="intro-copy">Ocho barrios forman hoy la comunidad de TECHO La Plata. Este espacio reúne su identidad, su recorrido y el trabajo que construimos en conjunto.</p>
         <div class="intro-note">Versión de diseño: los nombres ya están cargados. Las fotos y los textos de cada barrio quedan preparados para completar.</div>
       </div>
-    </section>
-
-    <section class="photo-story" aria-label="Imágenes del trabajo de TECHO La Plata">
-      <figure class="story-photo"><img src="assets/mano-martillo.webp" alt="Una mano sosteniendo un martillo durante una construcción" loading="lazy"><span>manos a la obra</span></figure>
-      <figure class="story-photo"><img src="assets/trabajo-territorio.webp" alt="Personas trabajando junto a una vivienda de madera" loading="lazy"><span>trabajo en equipo</span></figure>
-      <figure class="story-photo"><img src="assets/casa-atardecer.webp" alt="Vivienda de madera iluminada por el atardecer" loading="lazy"><span>transformar juntos</span></figure>
     </section>
 
     <section class="stats" aria-labelledby="stats-title">
