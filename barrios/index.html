@@ -265,9 +265,9 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       document.querySelector("#modal-title").textContent = barrio.nombre;
       document.querySelector("#modal-description").textContent = barrio.info ||
         "Acá va a ir la presentación de " + barrio.nombre + ". Dejamos el espacio preparado para contar su identidad y el proceso de trabajo comunitario.";
-      document.querySelector("#modal-coming").textContent = barrio.info
-        ? "Esta es una primera síntesis del recorrido. Próximamente vamos a sumar nuevas historias, hitos y fotos de la comunidad."
-        : "Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.";
+      const aviso = document.querySelector("#modal-coming");
+      aviso.hidden = Boolean(barrio.info);
+      aviso.textContent = "Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.";
       detalle.showModal();
     }
 
