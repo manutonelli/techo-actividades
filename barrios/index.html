@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nuestros barrios · TECHO La Plata</title>
+  <meta name="description" content="Conocé los ocho barrios donde construimos comunidad desde TECHO La Plata.">
+  <meta property="og:title" content="Nuestros barrios · TECHO La Plata">
+  <meta property="og:description" content="Ocho barrios, una misma comunidad.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://techolaplata.site/barrios/">
+  <link rel="icon" type="image/png" href="https://i.imgur.com/eEb3QS8.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{
+      --blue:#0092dd;--deep:#0067a6;--yellow:#fdc533;--pink:#e94362;
+      --green:#2fac66;--purple:#954b97;--ink:#1d1d1b;--paper:#f7f4ec;
+      --white:#fff;--line:rgba(29,29,27,.22)
+    }
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Fredoka",sans-serif}
+    a{color:inherit}
+    button{font:inherit}
+    .nav{position:absolute;z-index:20;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:space-between;padding:24px clamp(20px,5vw,72px);color:#fff}
+    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;font-weight:600}
+    .brand img{width:112px;height:auto;display:block;filter:brightness(0) invert(1)}
+    .back{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:14px;font-weight:600;padding:10px 16px;border:1.5px solid rgba(255,255,255,.55);border-radius:999px;backdrop-filter:blur(8px);background:rgba(0,0,0,.08)}
+    .back:hover{background:#fff;color:var(--ink)}
+    .hero{position:relative;min-height:760px;background:var(--blue);color:#fff;overflow:hidden;display:grid;align-items:end}
+    .hero::before{content:"";position:absolute;width:560px;height:560px;border:110px solid var(--yellow);border-radius:50%;right:-170px;top:-215px;transform:rotate(-8deg)}
+    .hero::after{content:"";position:absolute;width:280px;height:160px;background:var(--pink);left:-70px;bottom:40px;border-radius:50%;transform:rotate(18deg)}
+    .dots{position:absolute;inset:0;opacity:.26;background-image:radial-gradient(#fff 1.4px,transparent 1.4px);background-size:24px 24px;mask-image:linear-gradient(to right,transparent,black 20%,black 78%,transparent)}
+    .hero-inner{position:relative;z-index:2;width:min(1220px,100%);margin:0 auto;padding:170px clamp(20px,6vw,84px) 88px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.13em;font-size:13px;font-weight:700;margin-bottom:26px}
+    .eyebrow::before{content:"";width:34px;height:5px;background:var(--yellow);border-radius:99px}
+    h1{font-size:clamp(64px,11vw,150px);line-height:.82;letter-spacing:-.065em;text-transform:uppercase;margin:0;max-width:970px}
+    h1 span{display:block;color:var(--yellow);margin-left:clamp(20px,12vw,160px)}
+    .hero-bottom{display:grid;grid-template-columns:minmax(0,560px) 1fr;gap:60px;align-items:end;margin-top:54px}
+    .hero-copy{font-size:clamp(18px,2.1vw,27px);line-height:1.35;margin:0}
+    .hero-count{justify-self:end;display:flex;align-items:flex-end;gap:10px}
+    .hero-count strong{font-size:80px;line-height:.75;color:var(--yellow)}
+    .hero-count span{font-size:14px;line-height:1.1;text-transform:uppercase;font-weight:600;letter-spacing:.08em}
+    .ticker{background:var(--yellow);border-block:3px solid var(--ink);overflow:hidden;white-space:nowrap}
+    .ticker-track{display:inline-flex;min-width:max-content;animation:ticker 24s linear infinite;padding:15px 0;font-weight:700;text-transform:uppercase;letter-spacing:.09em}
+    .ticker-track span{margin:0 22px}
+    .ticker-track i{font-style:normal;color:var(--blue)}
+    @keyframes ticker{to{transform:translateX(-50%)}}
+    .intro{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:100px 0 48px;display:grid;grid-template-columns:.75fr 1.25fr;gap:70px}
+    .kicker{font-size:13px;text-transform:uppercase;letter-spacing:.14em;font-weight:700;color:var(--deep)}
+    .intro h2{font-size:clamp(40px,6vw,78px);line-height:.94;letter-spacing:-.045em;margin:0}
+    .intro-copy{font-size:19px;line-height:1.6;margin:4px 0 0;max-width:600px}
+    .intro-note{margin-top:24px;padding:14px 18px;border-left:5px solid var(--yellow);background:#fff;font-size:14px}
+    .neighborhoods{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:42px 0 120px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+    .card{position:relative;grid-column:span 6;min-height:470px;border:3px solid var(--ink);border-radius:26px;overflow:hidden;background:var(--card);cursor:pointer;text-align:left;padding:0;color:var(--ink);box-shadow:8px 8px 0 var(--ink);transition:transform .22s,box-shadow .22s}
+    .card:nth-child(3n+1){grid-column:span 7}.card:nth-child(3n+2){grid-column:span 5}
+    .card:hover,.card:focus-visible{transform:translate(-4px,-4px);box-shadow:12px 12px 0 var(--ink);outline:none}
+    .visual{position:absolute;inset:0;background:
+      linear-gradient(180deg,transparent 24%,rgba(0,0,0,.76) 100%),
+      var(--image,linear-gradient(135deg,var(--blue),var(--deep)));
+      background-size:cover;background-position:center}
+    .visual::before{content:"";position:absolute;inset:0;background-image:linear-gradient(115deg,rgba(255,255,255,.13) 0 14%,transparent 14% 38%,rgba(255,255,255,.08) 38% 51%,transparent 51%);mix-blend-mode:screen}
+    .placeholder{position:absolute;top:24px;right:22px;background:rgba(255,255,255,.92);border:2px solid var(--ink);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .num{position:absolute;top:24px;left:24px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--accent);border:2px solid var(--ink);font-weight:700}
+    .card-content{position:absolute;left:0;right:0;bottom:0;padding:30px;color:#fff}
+    .zone{font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:600;color:var(--accent);margin-bottom:7px}
+    .card h3{font-size:clamp(34px,4vw,58px);line-height:.92;letter-spacing:-.04em;margin:0;max-width:82%}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:22px;padding-top:17px;border-top:1px solid rgba(255,255,255,.4);font-size:14px}
+    .arrow{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--ink);font-size:20px}
+    .cta{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+    .cta::after{content:"8";position:absolute;right:-35px;bottom:-120px;font-size:420px;line-height:1;font-weight:700;color:rgba(255,255,255,.04)}
+    .cta-inner{position:relative;z-index:1;width:min(1180px,calc(100% - 40px));margin:0 auto;padding:90px 0;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+    .cta h2{font-size:clamp(42px,6vw,76px);line-height:.95;margin:0;letter-spacing:-.04em}
+    .cta p{font-size:18px;line-height:1.5;color:rgba(255,255,255,.7);max-width:620px;margin:18px 0 0}
+    .ig{display:inline-flex;align-items:center;gap:10px;background:var(--yellow);color:var(--ink);border:2px solid var(--yellow);padding:14px 20px;border-radius:999px;text-decoration:none;font-weight:700;white-space:nowrap}
+    footer{background:var(--blue);color:#fff;padding:30px clamp(20px,5vw,72px);display:flex;align-items:center;justify-content:space-between;gap:20px}
+    footer img{width:100px;filter:brightness(0) invert(1)}
+    footer small{opacity:.75}
+    dialog{width:min(720px,calc(100% - 28px));border:3px solid var(--ink);border-radius:26px;padding:0;box-shadow:12px 12px 0 var(--ink);background:var(--paper);color:var(--ink)}
+    dialog::backdrop{background:rgba(0,63,105,.72);backdrop-filter:blur(5px)}
+    .modal-head{background:var(--blue);color:#fff;padding:28px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+    .modal-head small{text-transform:uppercase;letter-spacing:.12em;color:var(--yellow);font-weight:700}
+    .modal-head h3{font-size:44px;line-height:1;margin:8px 0 0}
+    .close{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:var(--yellow);cursor:pointer;font-size:21px;flex:0 0 auto}
+    .modal-body{padding:32px}
+    .modal-body p{font-size:18px;line-height:1.6;margin:0}
+    .coming{margin-top:26px;border:2px dashed var(--line);border-radius:16px;padding:18px;background:#fff;font-size:14px}
+    @media(max-width:820px){
+      .hero{min-height:680px}.nav{padding:20px}.brand span{display:none}.brand img{width:96px}
+      .hero-inner{padding:150px 20px 70px}.hero-bottom{grid-template-columns:1fr;gap:32px}.hero-count{justify-self:start}
+      .intro{grid-template-columns:1fr;gap:24px;padding-top:74px}
+      .grid{display:block}.card,.card:nth-child(n){min-height:420px;margin-bottom:24px;width:100%}
+      .cta-inner{grid-template-columns:1fr}.ig{justify-self:start}footer{align-items:flex-start;flex-direction:column}
+    }
+    @media(max-width:480px){
+      h1{font-size:57px}h1 span{margin-left:18px}.hero{min-height:620px}.hero-count strong{font-size:62px}
+      .back{font-size:0;width:42px;height:42px;padding:0;justify-content:center}.back::before{content:"←";font-size:20px}
+      .card{min-height:390px;border-radius:20px}.card-content{padding:24px}.card h3{font-size:39px}
+      .placeholder{top:20px;right:18px}.num{top:18px;left:18px}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker-track{animation:none}.card{transition:none}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="/" aria-label="TECHO La Plata — inicio">
+        <img src="https://i.imgur.com/eEb3QS8.png" alt="TECHO">
+        <span>La Plata</span>
+      </a>
+      <a class="back" href="/">← Actividades del finde</a>
+    </nav>
+    <div class="dots"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">TECHO · La Plata</div>
+      <h1>Nuestros <span>barrios</span></h1>
+      <div class="hero-bottom">
+        <p class="hero-copy">Ocho comunidades donde nos encontramos, aprendemos y trabajamos en conjunto para transformar la realidad.</p>
+        <div class="hero-count"><strong>8</strong><span>barrios<br>en comunidad</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Conocernos <i>◆</i></span><span>Encontrarnos <i>◆</i></span><span>Organizarnos <i>◆</i></span><span>Transformar <i>◆</i></span>
+      <span>Conocernos <i>◆</i></span><span>Encontrarnos <i>◆</i></span><span>Organizarnos <i>◆</i></span><span>Transformar <i>◆</i></span>
+    </div>
+  </div>
+
+  <main>
+    <section class="intro">
+      <div><div class="kicker">Territorio y comunidad</div></div>
+      <div>
+        <h2>Cada barrio tiene una historia que merece ser contada.</h2>
+        <p class="intro-copy">Este espacio va a reunir la identidad, el recorrido y el trabajo comunitario de cada barrio en el que participa TECHO La Plata.</p>
+        <div class="intro-note">Versión de diseño: los nombres, fotos y textos son provisorios. La estructura ya está lista para cargar el contenido definitivo.</div>
+      </div>
+    </section>
+
+    <section class="neighborhoods" aria-label="Listado de barrios">
+      <div class="grid" id="barrios"></div>
+    </section>
+
+    <section class="cta">
+      <div class="cta-inner">
+        <div>
+          <h2>La transformación<br>se construye en comunidad.</h2>
+          <p>Seguinos para conocer las actividades, jornadas e historias que nacen en los barrios.</p>
+        </div>
+        <a class="ig" href="https://www.instagram.com/comunidadtecho_laplata/" target="_blank" rel="noopener">Instagram ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="https://i.imgur.com/eEb3QS8.png" alt="TECHO">
+    <small>TECHO La Plata · Buenos Aires</small>
+  </footer>
+
+  <dialog id="detalle">
+    <div class="modal-head">
+      <div><small id="modal-zone"></small><h3 id="modal-title"></h3></div>
+      <button class="close" aria-label="Cerrar" onclick="detalle.close()">×</button>
+    </div>
+    <div class="modal-body">
+      <p id="modal-description"></p>
+      <div class="coming">Próximamente: historia del barrio, año de inicio del trabajo de TECHO, referentes, hitos, proyectos y galería de fotos.</div>
+    </div>
+  </dialog>
+
+  <script>
+    // Reemplazá estos datos cuando estén definidos los nombres, textos y fotos.
+    const barrios = [
+      { nombre:"Barrio 01", zona:"La Plata", color:"#fdc533", foto:"" },
+      { nombre:"Barrio 02", zona:"La Plata", color:"#e94362", foto:"" },
+      { nombre:"Barrio 03", zona:"La Plata", color:"#2fac66", foto:"" },
+      { nombre:"Barrio 04", zona:"La Plata", color:"#fdc533", foto:"" },
+      { nombre:"Barrio 05", zona:"La Plata", color:"#954b97", foto:"" },
+      { nombre:"Barrio 06", zona:"La Plata", color:"#e94362", foto:"" },
+      { nombre:"Barrio 07", zona:"La Plata", color:"#2fac66", foto:"" },
+      { nombre:"Barrio 08", zona:"La Plata", color:"#fdc533", foto:"" }
+    ];
+
+    const gradients = [
+      "linear-gradient(135deg,#0092dd,#005ca9)",
+      "linear-gradient(135deg,#e94362,#8f2040)",
+      "linear-gradient(135deg,#2fac66,#087947)",
+      "linear-gradient(135deg,#fdc533,#e76f18)",
+      "linear-gradient(135deg,#954b97,#4f296d)",
+      "linear-gradient(135deg,#0092dd,#2fac66)",
+      "linear-gradient(135deg,#e94362,#fdc533)",
+      "linear-gradient(135deg,#005ca9,#954b97)"
+    ];
+
+    const grid = document.querySelector("#barrios");
+    const detalle = document.querySelector("#detalle");
+    const esc = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+
+    grid.innerHTML = barrios.map((b,i) => {
+      const background = b.foto ? "url('" + esc(b.foto) + "')" : gradients[i];
+      return `<button class="card" style="--accent:${b.color};--image:${background}" onclick="abrirBarrio(${i})">
+        <div class="visual"></div>
+        <span class="num">${String(i+1).padStart(2,"0")}</span>
+        <span class="placeholder">${b.foto ? "Conocé el barrio" : "Foto a definir"}</span>
+        <div class="card-content">
+          <div class="zone">${esc(b.zona)}</div>
+          <h3>${esc(b.nombre)}</h3>
+          <div class="card-footer"><span>Ver presentación</span><span class="arrow">↗</span></div>
+        </div>
+      </button>`;
+    }).join("");
+
+    function abrirBarrio(index){
+      const barrio = barrios[index];
+      document.querySelector("#modal-zone").textContent = barrio.zona;
+      document.querySelector("#modal-title").textContent = barrio.nombre;
+      document.querySelector("#modal-description").textContent =
+        "Acá va a ir la presentación de " + barrio.nombre + ". Dejamos el espacio preparado para contar su identidad y el proceso de trabajo comunitario.";
+      detalle.showModal();
+    }
+
+    detalle.addEventListener("click", event => {
+      const box = detalle.getBoundingClientRect();
+      if(event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) detalle.close();
+    });
+  </script>
+</body>
+</html>
