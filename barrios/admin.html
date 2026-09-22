@@ -44,7 +44,7 @@
           <select name="barrio" required>
             <option value="">Seleccionar</option>
             <option>Jazmín</option><option>Nueva Esperanza</option><option>Los Lapachos</option><option>Sector II</option>
-            <option>Sector III · Santa María</option><option>Sector IV · Santa María</option><option>Evita</option><option>El Hornero</option>
+            <option>Sector III</option><option>Sector IV</option><option>Evita</option><option>El Hornero</option>
           </select>
         </label>
         <label>Nombre de la actividad<input name="nombre" maxlength="80" required></label>
@@ -99,7 +99,7 @@
 
     async function loadActivities(){
       const payload = await request({action:"adminList"});
-      activities = payload.activities || [];
+      activities = (payload.activities || []).map(activity => ({...activity,barrio:activity.barrio.replace(" · Santa María", "")}));
       renderActivities();
     }
 
