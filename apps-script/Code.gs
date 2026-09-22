@@ -65,7 +65,7 @@ function validatedActivity_(body) {
     barrio: clean_(body.barrio, 80),
     nombre: clean_(body.nombre, 80),
     descripcion: clean_(body.descripcion, 280),
-    albumUrl: validateAlbumUrl_(body.albumUrl)
+    albumUrl: validateMediaUrl_(body.albumUrl)
   };
   if (!activity.barrio || !activity.nombre || !activity.descripcion) throw new Error('Completá todos los campos');
   return activity;
@@ -97,9 +97,11 @@ function validatePassword_(password) {
   if (!password || password !== expected) throw new Error('Contraseña incorrecta');
 }
 
-function validateAlbumUrl_(value) {
+function validateMediaUrl_(value) {
   const url = clean_(value, 500);
-  if (!/^https:\/\/(photos\.app\.goo\.gl|photos\.google\.com)\//i.test(url)) throw new Error('Ingresá un enlace válido de Google Fotos');
+  if (!/^https:\/\/(photos\.app\.goo\.gl|photos\.google\.com|drive\.google\.com)\//i.test(url)) {
+    throw new Error('Ingresá un enlace válido de Google Drive o Google Fotos');
+  }
   return url;
 }
 

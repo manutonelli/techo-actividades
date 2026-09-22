@@ -8,3 +8,5 @@
 4. Copiar la URL terminada en `/exec` y colocarla en `barrios/config.js`.
 
 La contraseña se valida dentro de Apps Script y nunca se guarda en el repositorio.
+
+Cada actividad admite un enlace compartido a una carpeta de Google Drive o a un álbum de Google Fotos. La carpeta o el álbum deben permitir que el voluntariado acceda mediante el enlace.
