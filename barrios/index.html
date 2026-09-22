@@ -307,7 +307,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       document.querySelector("#modal-activity-list").innerHTML = activities.map(activity => `
         <article class="activity">
           <h5>${esc(activity.nombre)}</h5>
-          <p>${esc(activity.descripcion)}</p>
+          ${activity.descripcion ? `<p>${esc(activity.descripcion)}</p>` : ""}
           <a href="${esc(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir carpeta y subir fotos ↗</a>
         </article>`).join("");
       activitiesSection.hidden = activities.length === 0;

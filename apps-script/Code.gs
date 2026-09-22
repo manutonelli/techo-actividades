@@ -67,7 +67,7 @@ function validatedActivity_(body) {
     descripcion: clean_(body.descripcion, 280),
     albumUrl: validateMediaUrl_(body.albumUrl)
   };
-  if (!activity.barrio || !activity.nombre || !activity.descripcion) throw new Error('Completá todos los campos');
+  if (!activity.barrio || !activity.nombre) throw new Error('Completá el barrio y el nombre de la actividad');
   return activity;
 }
 

@@ -48,7 +48,7 @@
           </select>
         </label>
         <label>Nombre de la actividad<input name="nombre" maxlength="80" required></label>
-        <label>Descripción breve<textarea name="descripcion" maxlength="280" required></textarea></label>
+        <label>Descripción breve (opcional)<textarea name="descripcion" maxlength="280"></textarea></label>
         <label>Enlace a la carpeta de Drive o álbum de Google Fotos<input name="albumUrl" type="url" placeholder="https://drive.google.com/drive/folders/..." required></label>
         <div class="activity-actions"><button type="submit">Guardar actividad</button><button class="secondary" id="cancel-edit" type="button" hidden>Cancelar edición</button></div>
         <div id="result" role="status" aria-live="polite"></div>
@@ -107,7 +107,7 @@
       if(!activities.length){list.innerHTML = '<div class="empty">Todavía no hay actividades cargadas.</div>';return}
       list.innerHTML = activities.map(activity => `<article class="activity">
         <div class="activity-head"><div><h3>${escapeHtml(activity.nombre)}</h3><small>${escapeHtml(activity.barrio)}</small></div></div>
-        <p>${escapeHtml(activity.descripcion)}</p>
+        ${activity.descripcion ? `<p>${escapeHtml(activity.descripcion)}</p>` : ""}
         <div class="activity-actions"><button class="secondary" type="button" data-edit="${escapeHtml(activity.id)}">Editar</button><button class="danger" type="button" data-delete="${escapeHtml(activity.id)}">Eliminar</button><a href="${escapeHtml(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir álbum ↗</a></div>
       </article>`).join("");
     }
