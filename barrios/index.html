@@ -244,7 +244,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
     </div>
   </dialog>
 
-  <script src="config.js"></script>
+  <script src="config.js?v=20260922-1"></script>
   <script>
     const barrios = [
       { nombre:"Jazmín", zona:"La Plata", color:"#fdc533", foto:"assets/galerias/jazmin-01.webp", fotos:["jazmin-01","jazmin-02","jazmin-03","jazmin-04","jazmin-05","jazmin-06"].map(nombre => `assets/galerias/${nombre}.webp`), info:"El trabajo de TECHO junto a la comunidad comenzó en 2022. Desde entonces, la Mesa de Trabajo permitió reconocer necesidades vinculadas con la iluminación, las calles, las veredas y el drenaje del agua.\n\nEse recorrido dio lugar a distintas iniciativas barriales y a un nuevo desafío: avanzar con el zanjeo y el entubado con caños de hormigón para mejorar el escurrimiento y las condiciones de las calles." },
@@ -353,7 +353,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
     });
 
     async function cargarActividades(){
-      const apiUrl = window.BARRIOS_API_URL;
+      const apiUrl = window.BARRIOS_API_URL || "https://script.google.com/macros/s/AKfycbzv68jjXyRW36YjVT23ZtRdjB4CUdPPve5eQnb4nCmO1HsQ9AGS8MoJejgCJOiGTGE/exec";
       if(!apiUrl) return;
       try{
         const response = await fetch(`${apiUrl}?action=list`);
