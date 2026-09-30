@@ -1,6 +1,11 @@
-# techo-actividades
+# TECHO La Plata
+
+Sitio público de actividades, barrios y guía de roles.
+
+La portada y los barrios usan Google Sheets + Apps Script. La contraseña se valida en el servidor y se guarda como propiedad del script; no hay contraseñas ni claves de Supabase en el sitio. Ver [configuración e implementación](apps-script/README.md).
+
 ## Verificación
 
-Ejecutar `node tests/review.test.cjs` para comprobar el renderizado seguro, las fechas dobles, los errores al guardar o borrar y las validaciones de Apps Script. Estas pruebas usan servicios simulados y no modifican datos reales.
+Ejecutar `node tests/review.test.cjs`. Las pruebas usan servicios simulados y no modifican datos reales.
 
-La administración de la página principal aún usa una contraseña validada en el navegador. Para asegurar las escrituras, configurar autenticación de Supabase y políticas RLS; esa contraseña no constituye autorización del lado del servidor.
+La portada conserva una copia pública de las actividades en `data/actividades.json`, con sus imágenes en `data/photos/`. Se usa para la transición cuando la API todavía no está actualizada o no responde. Los cambios posteriores se guardan en la hoja Portada; el respaldo no se actualiza automáticamente.

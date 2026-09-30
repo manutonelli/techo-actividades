@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1787685113008",
+    "title": "Revisitas | Sector 2",
+    "day": "SÁBADO",
+    "date": "3 DE OCTUBRE",
+    "punto": "7 y 50 a las 8:00hs",
+    "descripcion": "Vamos a estar haciendo revisitas a cara a la construcción de noviembre",
+    "link": "https://actividades.techo.org/actividades/41660",
+    "color": "#F088B6",
+    "photos": [
+      "https://techolaplata.site/data/photos/1787685113008-0.jpg",
+      "https://techolaplata.site/data/photos/1787685113008-1.jpg"
+    ],
+    "active": true
+  },
+  {
+    "id": "1788308315894",
+    "title": "Proyecto de veredas | Sector 4",
+    "day": "DOMINGO",
+    "date": "4 DE OCTUBRE",
+    "punto": "Ofi C. 47 885 a las 9:00hs",
+    "descripcion": "Vamos a iniciar el proyecto de veredas, junto con los vecinxs del barrio",
+    "link": "https://actividades.techo.org/actividades/41680",
+    "color": "#2FAC66",
+    "photos": [
+      "https://techolaplata.site/data/photos/1788308315894-0.jpg",
+      "https://techolaplata.site/data/photos/1788308315894-1.jpg"
+    ],
+    "active": true
+  },
+  {
+    "id": "1790175684970",
+    "title": "Proyecto de veredas | Sector 3",
+    "day": "DOMINGO",
+    "date": "4 DE OCTUBRE",
+    "punto": "Ofi C. 47 885 a las 9:00hs",
+    "descripcion": "Ya hicimos los primeros metros de veredas juntos a los vecinos y voluntarios, en esta ocasión seguiremos con los que restan",
+    "link": "https://actividades.techo.org/actividades/41690",
+    "color": "#FDC533",
+    "photos": [
+      "https://techolaplata.site/data/photos/1790175684970-0.jpg",
+      "https://techolaplata.site/data/photos/1790175684970-1.jpg"
+    ],
+    "active": true
+  },
+  {
+    "id": "1790175777399",
+    "title": "Armado de escuelita | Nueva Esperanza",
+    "day": "DOMINGO",
+    "date": "4 DE OCTUBRE",
+    "punto": "Ofi C. 47 885 a las 9:00hs",
+    "descripcion": "Vamos a seguir adelante con las vigas de piso, adelantar parte de la instalación del biodigestor, continuar desarmando pallets y planificar la instalación del piso",
+    "link": "https://actividades.techo.org/actividades/41692",
+    "color": "#0092DD",
+    "photos": [
+      "https://techolaplata.site/data/photos/1790175777399-0.jpg",
+      "https://techolaplata.site/data/photos/1790175777399-1.jpg"
+    ],
+    "active": true
+  }
+]
