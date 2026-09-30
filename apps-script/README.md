@@ -10,3 +10,5 @@
 La contraseña se valida dentro de Apps Script y nunca se guarda en el repositorio.
 
 Cada actividad admite un enlace compartido a una carpeta de Google Drive o a un álbum de Google Fotos. La carpeta o el álbum deben permitir que el voluntariado acceda mediante el enlace.
+
+Después de modificar `Code.gs`, actualizar el código en Apps Script y publicar una nueva versión desde **Implementar → Gestionar implementaciones → Editar → Nueva versión**. El despliegue de GitHub Pages no actualiza esta API.

@@ -274,6 +274,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
     const activitiesByBarrio = new Map();
     let fotosActivas = [];
     let fotoActiva = 0;
+    let barrioAbierto = null;
     const esc = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
 
     grid.innerHTML = barrios.map((b,i) => {
@@ -290,8 +291,11 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       </button>`;
     }).join("");
 
+    function validAlbum(value){try{const u=new URL(value);return u.protocol==='https:' && ['photos.app.goo.gl','photos.google.com','drive.google.com'].includes(u.hostname);}catch(error){return false;}}
     function abrirBarrio(index){
       const barrio = barrios[index];
+      if(!barrio)return;
+      barrioAbierto = index;
       document.querySelector("#modal-zone").textContent = barrio.zona;
       document.querySelector("#modal-title").textContent = barrio.nombre;
       document.querySelector("#modal-description").textContent = barrio.info ||
@@ -311,7 +315,7 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
           <a href="${esc(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir carpeta y subir fotos ↗</a>
         </article>`).join("");
       activitiesSection.hidden = activities.length === 0;
-      detalle.showModal();
+      if(!detalle.open)detalle.showModal();
     }
 
     function actualizarGaleria(nombreBarrio){
@@ -331,12 +335,16 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
       actualizarGaleria(document.querySelector("#modal-title").textContent);
     }
 
-    let inicioDeslizamiento = 0;
+    let inicioDeslizamiento = null;
     document.querySelector("#modal-gallery").addEventListener("pointerdown", event => inicioDeslizamiento = event.clientX);
     document.querySelector("#modal-gallery").addEventListener("pointerup", event => {
+      if(inicioDeslizamiento===null)return;
       const distancia = event.clientX - inicioDeslizamiento;
+      inicioDeslizamiento=null;
       if(Math.abs(distancia) > 45) moverGaleria(distancia > 0 ? -1 : 1);
     });
+
+    document.querySelector("#modal-gallery").addEventListener("pointercancel",()=>inicioDeslizamiento=null);
 
     function abrirMesa(){
       mesa.showModal();
@@ -359,11 +367,15 @@ Es el lugar donde se planifica y se construye colectivamente.</p>
         const response = await fetch(`${apiUrl}?action=list`);
         if(!response.ok) throw new Error("No se pudieron cargar las actividades");
         const payload = await response.json();
-        (payload.activities || []).forEach(activity => {
+        if(!payload.ok || !Array.isArray(payload.activities))throw new Error(payload.error || "Respuesta inválida");
+        activitiesByBarrio.clear();
+        payload.activities.forEach(activity => {
+          if(!activity || typeof activity.barrio!=="string" || !validAlbum(activity.albumUrl))return;
           activity.barrio = activity.barrio.replace(" · Santa María", "");
           if(!activitiesByBarrio.has(activity.barrio)) activitiesByBarrio.set(activity.barrio, []);
           activitiesByBarrio.get(activity.barrio).push(activity);
         });
+        if(detalle.open && barrioAbierto!==null)abrirBarrio(barrioAbierto);
       }catch(error){
         console.warn("Las actividades no están disponibles en este momento.", error);
       }

@@ -78,10 +78,18 @@
     }
 
     async function request(body){
-      const response = await fetch(apiUrl, {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,password})});
-      const payload = await response.json();
-      if(!payload.ok) throw new Error(payload.error || "No se pudo completar la operación");
-      return payload;
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(),20000);
+      try{
+        const response = await fetch(apiUrl, {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,password}),signal:controller.signal});
+        if(!response.ok)throw new Error("No se pudo conectar con el servidor. Volvé a intentar.");
+        const payload = await response.json().catch(()=>{throw new Error("El servidor devolvió una respuesta inválida.");});
+        if(!payload || !payload.ok) throw new Error(payload && payload.error || "No se pudo completar la operación");
+        return payload;
+      }catch(error){
+        if(error.name==="AbortError")throw new Error("El servidor tardó demasiado. Volvé a intentar.");
+        throw error;
+      }finally{clearTimeout(timeout);}
     }
 
     loginForm.addEventListener("submit", async event => {
@@ -99,16 +107,19 @@
 
     async function loadActivities(){
       const payload = await request({action:"adminList"});
-      activities = (payload.activities || []).map(activity => ({...activity,barrio:activity.barrio.replace(" · Santa María", "")}));
+      if(!Array.isArray(payload.activities))throw new Error("No se pudo leer la lista de actividades.");
+      activities = payload.activities.filter(activity=>activity && typeof activity.barrio==="string").map(activity => ({...activity,id:String(activity.id),barrio:activity.barrio.replace(" · Santa María", "")}));
       renderActivities();
     }
+
+    function validAlbum(value){try{const u=new URL(value);return u.protocol==="https:" && ["photos.app.goo.gl","photos.google.com","drive.google.com"].includes(u.hostname);}catch(error){return false;}}
 
     function renderActivities(){
       if(!activities.length){list.innerHTML = '<div class="empty">Todavía no hay actividades cargadas.</div>';return}
       list.innerHTML = activities.map(activity => `<article class="activity">
         <div class="activity-head"><div><h3>${escapeHtml(activity.nombre)}</h3><small>${escapeHtml(activity.barrio)}</small></div></div>
         ${activity.descripcion ? `<p>${escapeHtml(activity.descripcion)}</p>` : ""}
-        <div class="activity-actions"><button class="secondary" type="button" data-edit="${escapeHtml(activity.id)}">Editar</button><button class="danger" type="button" data-delete="${escapeHtml(activity.id)}">Eliminar</button><a href="${escapeHtml(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir álbum ↗</a></div>
+        <div class="activity-actions"><button class="secondary" type="button" data-edit="${escapeHtml(activity.id)}">Editar</button><button class="danger" type="button" data-delete="${escapeHtml(activity.id)}">Eliminar</button>${validAlbum(activity.albumUrl) ? `<a href="${escapeHtml(activity.albumUrl)}" target="_blank" rel="noopener noreferrer">Abrir álbum ↗</a>` : ""}</div>
       </article>`).join("");
     }
 
@@ -121,25 +132,28 @@
       const data = Object.fromEntries(new FormData(form));
       try{
         await request({action:data.id ? "update" : "create",...data});
-        resetForm(); await loadActivities(); result.className = "success"; result.textContent = "Actividad guardada.";
+        resetForm(); result.className = "success"; result.textContent = "Actividad guardada.";
+        try{await loadActivities();}catch(error){result.textContent="Actividad guardada. No se pudo actualizar la lista; volvé a ingresar para verla.";}
       }catch(error){
         result.className = "error"; result.textContent = error.message;
       }finally{button.disabled = false}
     });
 
     list.addEventListener("click", async event => {
-      const editId = event.target.dataset.edit;
-      const deleteId = event.target.dataset.delete;
+      const target=event.target.closest("button");if(!target || target.disabled)return;
+      const editId = target.dataset.edit;
+      const deleteId = target.dataset.delete;
       if(editId){
         const activity = activities.find(item => item.id === editId);
         if(!activity) return;
-        for(const key of ["id","barrio","nombre","descripcion","albumUrl"]) form.elements[key].value = activity[key];
+        for(const key of ["id","barrio","nombre","descripcion","albumUrl"]) form.elements[key].value = activity[key] || "";
         cancelEdit.hidden = false; form.scrollIntoView({behavior:"smooth"});
       }
       if(deleteId && confirm("¿Eliminar esta actividad?")){
-        event.target.disabled = true;
+        target.disabled = true;
         try{await request({action:"delete",id:deleteId});await loadActivities()}
         catch(error){result.className="error";result.textContent=error.message}
+        finally{target.disabled=false;}
       }
     });
 

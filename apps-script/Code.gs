@@ -3,23 +3,25 @@ const SPREADSHEET_ID = '1vRXHAQHdWCSGfFlGDlPhpAC-zUc3nGhyMcVUTg6NR8M';
 const HEADERS = ['id', 'barrio', 'nombre', 'descripcion', 'album_url', 'activo', 'created_at'];
 
 function doGet(e) {
-  if ((e.parameter.action || 'list') !== 'list') return json_({ ok: false, error: 'Acción inválida' });
-  const sheet = sheet_();
-  const rows = sheet.getDataRange().getValues().slice(1);
-  const activities = rows
-    .filter(row => row[5] === true || String(row[5]).toLowerCase() === 'true')
-    .map(row => ({ id: row[0], barrio: row[1], nombre: row[2], descripcion: row[3], albumUrl: row[4] }));
-  return json_({ ok: true, activities });
+  try {
+    const action = e && e.parameter && e.parameter.action || 'list';
+    if (action !== 'list') throw new Error('Acción inválida');
+    const activities = allActivities_().filter(activity => activity.activo);
+    return json_({ ok: true, activities });
+  } catch (error) { return json_({ ok: false, error: error.message }); }
 }
 
 function doPost(e) {
   try {
-    const body = JSON.parse(e.postData.contents || '{}');
+    const body = JSON.parse(e && e.postData && e.postData.contents || '{}');
     validatePassword_(body.password);
     if (body.action === 'adminList') return json_({ ok: true, activities: allActivities_() });
-    if (body.action === 'create') return createActivity_(body);
-    if (body.action === 'update') return updateActivity_(body);
-    if (body.action === 'delete') return deleteActivity_(body);
+    const operations = { create: createActivity_, update: updateActivity_, delete: deleteActivity_ };
+    if (Object.prototype.hasOwnProperty.call(operations, body.action)) {
+      const lock = LockService.getScriptLock();
+      lock.waitLock(10000);
+      try { return operations[body.action](body); } finally { lock.releaseLock(); }
+    }
     throw new Error('Acción inválida');
   } catch (error) {
     return json_({ ok: false, error: error.message });
@@ -28,11 +30,7 @@ function doPost(e) {
 
 function createActivity_(body) {
   const activity = validatedActivity_(body);
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-  try {
-    sheet_().appendRow([Utilities.getUuid(), activity.barrio, activity.nombre, activity.descripcion, activity.albumUrl, true, new Date()]);
-  } finally { lock.releaseLock(); }
+  sheet_().appendRow([Utilities.getUuid(), sheetText_(activity.barrio), sheetText_(activity.nombre), sheetText_(activity.descripcion), activity.albumUrl, true, new Date()]);
   return json_({ ok: true });
 }
 
@@ -43,7 +41,7 @@ function updateActivity_(body) {
   if (!row) throw new Error('La actividad no existe');
   const sheet = sheet_();
   const createdAt = sheet.getRange(row, 7).getValue();
-  sheet.getRange(row, 1, 1, 7).setValues([[id, activity.barrio, activity.nombre, activity.descripcion, activity.albumUrl, true, createdAt]]);
+  sheet.getRange(row, 1, 1, 7).setValues([[id, sheetText_(activity.barrio), sheetText_(activity.nombre), sheetText_(activity.descripcion), activity.albumUrl, true, createdAt]]);
   return json_({ ok: true });
 }
 
@@ -56,7 +54,7 @@ function deleteActivity_(body) {
 
 function allActivities_() {
   return sheet_().getDataRange().getValues().slice(1).map(row => ({
-    id: row[0], barrio: row[1], nombre: row[2], descripcion: row[3], albumUrl: row[4]
+    id: row[0], barrio: row[1], nombre: row[2], descripcion: row[3], albumUrl: row[4], activo: row[5] === true || String(row[5]).toLowerCase() === 'true'
   }));
 }
 
@@ -103,6 +101,10 @@ function validateMediaUrl_(value) {
     throw new Error('Ingresá un enlace válido de Google Drive o Google Fotos');
   }
   return url;
+}
+
+function sheetText_(value) {
+  return String(value).startsWith('=') ? "'" + value : value;
 }
 
 function clean_(value, maxLength) {
